@@ -1074,3 +1074,140 @@ const MOCK_DATA = {
       "po": "PO2025-018",
       "mat": "MAT-HANDLE-001",
       "supplier": "广东铝材加工",
+      "qty": 6000,
+      "amt": 27000,
+      "date": "2024-12-21",
+      "status": "producing"
+    },
+    {
+      "po": "PO2025-019",
+      "mat": "MAT-LOCK-001",
+      "supplier": "深圳智能锁具",
+      "qty": 3500,
+      "amt": 42000,
+      "date": "2024-12-27",
+      "status": "producing"
+    },
+    {
+      "po": "PO2025-020",
+      "mat": "MAT-FOAM-001",
+      "supplier": "顺德海绵厂",
+      "qty": 12000,
+      "amt": 66000,
+      "date": "2024-12-22",
+      "status": "producing"
+    }
+  ],
+  "warnings": [
+    {
+      "level": "RED",
+      "itemCode": "MAT-STEEL-002",
+      "itemName": "Q235方管加厚",
+      "productName": "户外折叠椅B型",
+      "orderId": "SO2025-002",
+      "stockQty": 8000,
+      "demandQty": 45000,
+      "safetyStock": 25000,
+      "dueDate": "2024-12-12",
+      "supplier": "马钢股份"
+    },
+    {
+      "level": "RED",
+      "itemCode": "MAT-FABRIC-002",
+      "itemName": "800D牛津布",
+      "productName": "户外折叠椅B型",
+      "orderId": "SO2025-002",
+      "stockQty": 5000,
+      "demandQty": 18000,
+      "safetyStock": 18000,
+      "dueDate": "2024-12-12",
+      "supplier": "广东联邦纺织"
+    },
+    {
+      "level": "RED",
+      "itemCode": "MAT-BOARD-001",
+      "itemName": "多层板",
+      "productName": "便携折叠桌",
+      "orderId": "SO2025-001",
+      "stockQty": 4500,
+      "demandQty": 3300,
+      "safetyStock": 8000,
+      "dueDate": "2024-12-18",
+      "supplier": "山东临沂板材"
+    },
+    {
+      "level": "ORANGE",
+      "itemCode": "MAT-FABRIC-003",
+      "itemName": "210T涤纶布",
+      "productName": "露营帐篷3人款",
+      "orderId": "SO2025-006",
+      "stockQty": 15000,
+      "demandQty": 24000,
+      "safetyStock": 25000,
+      "dueDate": "2024-12-08",
+      "supplier": "浙江永盛纺织"
+    },
+    {
+      "level": "ORANGE",
+      "itemCode": "MAT-POLE-001",
+      "itemName": "玻璃纤维杆",
+      "productName": "露营帐篷3人款",
+      "orderId": "SO2025-002",
+      "stockQty": 12000,
+      "demandQty": 16000,
+      "safetyStock": 18000,
+      "dueDate": "2024-12-12",
+      "supplier": "威海玻纤制品"
+    },
+    {
+      "level": "YELLOW",
+      "itemCode": "MAT-ZIPPER-001",
+      "itemName": "尼龙拉链",
+      "productName": "露营帐篷3人款",
+      "orderId": "SO2025-005",
+      "stockQty": 4500,
+      "demandQty": 6000,
+      "safetyStock": 8000,
+      "dueDate": "2024-12-30",
+      "supplier": "YKK拉链"
+    },
+    {
+      "level": "YELLOW",
+      "itemCode": "MAT-PLASTIC-002",
+      "itemName": "PP扶手套",
+      "productName": "户外折叠椅B型",
+      "orderId": "SO2025-004",
+      "stockQty": 32000,
+      "demandQty": 54000,
+      "safetyStock": 50000,
+      "dueDate": "2024-12-15",
+      "supplier": "佛山塑胶厂"
+    },
+    {
+      "level": "BLUE",
+      "itemCode": "MAT-BOARD-002",
+      "itemName": "竹木板",
+      "productName": "多功能野餐桌",
+      "orderId": "SO2025-003",
+      "stockQty": 2800,
+      "demandQty": 3000,
+      "safetyStock": 6000,
+      "dueDate": "2024-12-28",
+      "supplier": "浙江安吉竹业"
+    },
+    {
+      "level": "BLUE",
+      "itemCode": "MAT-LOCK-001",
+      "itemName": "密码锁",
+      "productName": "户外储物柜",
+      "orderId": "SO2025-004",
+      "stockQty": 2200,
+      "demandQty": 600,
+      "safetyStock": 4000,
+      "dueDate": "2024-12-15",
+      "supplier": "深圳智能锁具"
+    }
+  ]
+};
+
+module.exports = MOCK_DATA;
