@@ -14,7 +14,11 @@ app.get("/api/data", (req, res) => {
   res.json(data);
 });
 
+// ✅ 添加这个新路由
+app.get("/api/warnings", (req, res) => {
+  res.json(data.warnings || []);
+});
+
 app.listen(PORT, () => {
   console.log(`Backend API running at http://localhost:${PORT}`);
 });
-
