@@ -4,37 +4,43 @@ const MOCK_DATA = {
       "id": "SO2025-001",
       "customer": "沃尔玛中国",
       "orderDate": "2024-11-10",
-      "deliveryDate": "2024-12-18"
+      "deliveryDate": "2024-12-18",
+      "salesPerson": "张伟"
     },
     {
       "id": "SO2025-002",
       "customer": "迪卡侬上海",
       "orderDate": "2024-11-15",
-      "deliveryDate": "2024-12-12"
+      "deliveryDate": "2024-12-12",
+      "salesPerson": "李娜"
     },
     {
       "id": "SO2025-003",
       "customer": "宜家家居",
       "orderDate": "2024-11-20",
-      "deliveryDate": "2024-12-28"
+      "deliveryDate": "2024-12-28",
+      "salesPerson": "王强"
     },
     {
       "id": "SO2025-004",
       "customer": "京东自营",
       "orderDate": "2024-11-22",
-      "deliveryDate": "2024-12-15"
+      "deliveryDate": "2024-12-15",
+      "salesPerson": "张伟"
     },
     {
       "id": "SO2025-005",
       "customer": "苏宁易购",
       "orderDate": "2024-11-25",
-      "deliveryDate": "2024-12-30"
+      "deliveryDate": "2024-12-30",
+      "salesPerson": "李娜"
     },
     {
       "id": "SO2025-006",
       "customer": "天猫国际",
       "orderDate": "2024-11-28",
-      "deliveryDate": "2024-12-08"
+      "deliveryDate": "2024-12-08",
+      "salesPerson": "王强"
     }
   ],
   "orderLines": [
@@ -290,7 +296,8 @@ const MOCK_DATA = {
       "transit": 30000,
       "safe": 40000,
       "lead": 15,
-      "suppliers": 3
+      "suppliers": 3,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-STEEL-002",
@@ -302,7 +309,8 @@ const MOCK_DATA = {
       "transit": 0,
       "safe": 25000,
       "lead": 18,
-      "suppliers": 1
+      "suppliers": 1,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-STEEL-003",
@@ -314,7 +322,8 @@ const MOCK_DATA = {
       "transit": 15000,
       "safe": 20000,
       "lead": 20,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-FABRIC-001",
@@ -326,7 +335,8 @@ const MOCK_DATA = {
       "transit": 20000,
       "safe": 30000,
       "lead": 25,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "陈明"
     },
     {
       "code": "MAT-FABRIC-002",
@@ -338,7 +348,8 @@ const MOCK_DATA = {
       "transit": 8000,
       "safe": 18000,
       "lead": 30,
-      "suppliers": 1
+      "suppliers": 1,
+      "buyer": "陈明"
     },
     {
       "code": "MAT-FABRIC-003",
@@ -350,7 +361,8 @@ const MOCK_DATA = {
       "transit": 0,
       "safe": 25000,
       "lead": 28,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "陈明"
     },
     {
       "code": "MAT-RIVET-001",
@@ -362,7 +374,8 @@ const MOCK_DATA = {
       "transit": 500000,
       "safe": 300000,
       "lead": 10,
-      "suppliers": 3
+      "suppliers": 3,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-RIVET-002",
@@ -374,7 +387,8 @@ const MOCK_DATA = {
       "transit": 200000,
       "safe": 250000,
       "lead": 10,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-PLASTIC-001",
@@ -386,7 +400,8 @@ const MOCK_DATA = {
       "transit": 80000,
       "safe": 120000,
       "lead": 12,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-PLASTIC-002",
@@ -398,7 +413,8 @@ const MOCK_DATA = {
       "transit": 25000,
       "safe": 50000,
       "lead": 15,
-      "suppliers": 1
+      "suppliers": 1,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-PLASTIC-003",
@@ -410,7 +426,8 @@ const MOCK_DATA = {
       "transit": 30000,
       "safe": 35000,
       "lead": 12,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-BOARD-001",
@@ -422,7 +439,8 @@ const MOCK_DATA = {
       "transit": 0,
       "safe": 8000,
       "lead": 22,
-      "suppliers": 1
+      "suppliers": 1,
+      "buyer": "陈明"
     },
     {
       "code": "MAT-BOARD-002",
@@ -434,7 +452,8 @@ const MOCK_DATA = {
       "transit": 5000,
       "safe": 6000,
       "lead": 25,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "陈明"
     },
     {
       "code": "MAT-BOARD-003",
@@ -446,7 +465,8 @@ const MOCK_DATA = {
       "transit": 8000,
       "safe": 10000,
       "lead": 18,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "陈明"
     },
     {
       "code": "MAT-FOAM-001",
@@ -458,7 +478,8 @@ const MOCK_DATA = {
       "transit": 10000,
       "safe": 15000,
       "lead": 20,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "陈明"
     },
     {
       "code": "MAT-HINGE-001",
@@ -470,7 +491,8 @@ const MOCK_DATA = {
       "transit": 20000,
       "safe": 25000,
       "lead": 15,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-HINGE-002",
@@ -482,7 +504,8 @@ const MOCK_DATA = {
       "transit": 6000,
       "safe": 8000,
       "lead": 18,
-      "suppliers": 1
+      "suppliers": 1,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-POLE-001",
@@ -494,7 +517,8 @@ const MOCK_DATA = {
       "transit": 0,
       "safe": 18000,
       "lead": 35,
-      "suppliers": 1
+      "suppliers": 1,
+      "buyer": "陈明"
     },
     {
       "code": "MAT-ROPE-001",
@@ -506,7 +530,8 @@ const MOCK_DATA = {
       "transit": 30000,
       "safe": 35000,
       "lead": 12,
-      "suppliers": 3
+      "suppliers": 3,
+      "buyer": "陈明"
     },
     {
       "code": "MAT-PEG-001",
@@ -518,7 +543,8 @@ const MOCK_DATA = {
       "transit": 40000,
       "safe": 50000,
       "lead": 10,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-ZIPPER-001",
@@ -530,7 +556,8 @@ const MOCK_DATA = {
       "transit": 0,
       "safe": 8000,
       "lead": 20,
-      "suppliers": 1
+      "suppliers": 1,
+      "buyer": "陈明"
     },
     {
       "code": "MAT-HANDLE-001",
@@ -542,7 +569,8 @@ const MOCK_DATA = {
       "transit": 5000,
       "safe": 6000,
       "lead": 15,
-      "suppliers": 2
+      "suppliers": 2,
+      "buyer": "刘洋"
     },
     {
       "code": "MAT-LOCK-001",
@@ -554,7 +582,8 @@ const MOCK_DATA = {
       "transit": 3000,
       "safe": 4000,
       "lead": 25,
-      "suppliers": 1
+      "suppliers": 1,
+      "buyer": "陈明"
     }
   ],
   "suppliers": [
@@ -1045,140 +1074,3 @@ const MOCK_DATA = {
       "po": "PO2025-018",
       "mat": "MAT-HANDLE-001",
       "supplier": "广东铝材加工",
-      "qty": 6000,
-      "amt": 27000,
-      "date": "2024-12-21",
-      "status": "producing"
-    },
-    {
-      "po": "PO2025-019",
-      "mat": "MAT-LOCK-001",
-      "supplier": "深圳智能锁具",
-      "qty": 3500,
-      "amt": 42000,
-      "date": "2024-12-27",
-      "status": "producing"
-    },
-    {
-      "po": "PO2025-020",
-      "mat": "MAT-FOAM-001",
-      "supplier": "顺德海绵厂",
-      "qty": 12000,
-      "amt": 66000,
-      "date": "2024-12-22",
-      "status": "producing"
-    }
-  ],
-  "warnings": [
-    {
-      "level": "RED",
-      "itemCode": "MAT-STEEL-002",
-      "itemName": "Q235方管加厚",
-      "productName": "户外折叠椅B型",
-      "orderId": "SO2025-002",
-      "stockQty": 8000,
-      "demandQty": 45000,
-      "safetyStock": 25000,
-      "dueDate": "2024-12-12",
-      "supplier": "马钢股份"
-    },
-    {
-      "level": "RED",
-      "itemCode": "MAT-FABRIC-002",
-      "itemName": "800D牛津布",
-      "productName": "户外折叠椅B型",
-      "orderId": "SO2025-002",
-      "stockQty": 5000,
-      "demandQty": 18000,
-      "safetyStock": 18000,
-      "dueDate": "2024-12-12",
-      "supplier": "广东联邦纺织"
-    },
-    {
-      "level": "RED",
-      "itemCode": "MAT-BOARD-001",
-      "itemName": "多层板",
-      "productName": "便携折叠桌",
-      "orderId": "SO2025-001",
-      "stockQty": 4500,
-      "demandQty": 3300,
-      "safetyStock": 8000,
-      "dueDate": "2024-12-18",
-      "supplier": "山东临沂板材"
-    },
-    {
-      "level": "ORANGE",
-      "itemCode": "MAT-FABRIC-003",
-      "itemName": "210T涤纶布",
-      "productName": "露营帐篷3人款",
-      "orderId": "SO2025-006",
-      "stockQty": 15000,
-      "demandQty": 24000,
-      "safetyStock": 25000,
-      "dueDate": "2024-12-08",
-      "supplier": "浙江永盛纺织"
-    },
-    {
-      "level": "ORANGE",
-      "itemCode": "MAT-POLE-001",
-      "itemName": "玻璃纤维杆",
-      "productName": "露营帐篷3人款",
-      "orderId": "SO2025-002",
-      "stockQty": 12000,
-      "demandQty": 16000,
-      "safetyStock": 18000,
-      "dueDate": "2024-12-12",
-      "supplier": "威海玻纤制品"
-    },
-    {
-      "level": "YELLOW",
-      "itemCode": "MAT-ZIPPER-001",
-      "itemName": "尼龙拉链",
-      "productName": "露营帐篷3人款",
-      "orderId": "SO2025-005",
-      "stockQty": 4500,
-      "demandQty": 6000,
-      "safetyStock": 8000,
-      "dueDate": "2024-12-30",
-      "supplier": "YKK拉链"
-    },
-    {
-      "level": "YELLOW",
-      "itemCode": "MAT-PLASTIC-002",
-      "itemName": "PP扶手套",
-      "productName": "户外折叠椅B型",
-      "orderId": "SO2025-004",
-      "stockQty": 32000,
-      "demandQty": 54000,
-      "safetyStock": 50000,
-      "dueDate": "2024-12-15",
-      "supplier": "佛山塑胶厂"
-    },
-    {
-      "level": "BLUE",
-      "itemCode": "MAT-BOARD-002",
-      "itemName": "竹木板",
-      "productName": "多功能野餐桌",
-      "orderId": "SO2025-003",
-      "stockQty": 2800,
-      "demandQty": 3000,
-      "safetyStock": 6000,
-      "dueDate": "2024-12-28",
-      "supplier": "浙江安吉竹业"
-    },
-    {
-      "level": "BLUE",
-      "itemCode": "MAT-LOCK-001",
-      "itemName": "密码锁",
-      "productName": "户外储物柜",
-      "orderId": "SO2025-004",
-      "stockQty": 2200,
-      "demandQty": 600,
-      "safetyStock": 4000,
-      "dueDate": "2024-12-15",
-      "supplier": "深圳智能锁具"
-    }
-  ]
-};
-
-module.exports = MOCK_DATA;
