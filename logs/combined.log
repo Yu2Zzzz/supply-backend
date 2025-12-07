@@ -4143,3 +4143,30 @@
 {"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T06:31:15.779Z"}
 {"level":"info","message":"GET /data - 4.74ms","timestamp":"2025-12-07T06:31:15.784Z"}
 {"level":"info","message":{"duration":"5ms","method":"GET","statusCode":304,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-07T06:31:15.784Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-07T08:52:12.057Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-07T08:55:00.907Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:56:33.902Z"}
+{"level":"info","message":"GET /auth/me - 6.20ms","timestamp":"2025-12-07T08:56:33.908Z"}
+{"level":"info","message":{"duration":"6ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:56:33.908Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:56:33.909Z"}
+{"level":"info","message":"GET /auth/me - 1.74ms","timestamp":"2025-12-07T08:56:33.910Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:56:33.911Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-07T08:56:39.590Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:56:40.262Z"}
+{"level":"info","message":"GET /auth/me - 5.61ms","timestamp":"2025-12-07T08:56:40.267Z"}
+{"level":"info","message":{"duration":"6ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:56:40.268Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:56:40.269Z"}
+{"level":"info","message":"GET /auth/me - 1.40ms","timestamp":"2025-12-07T08:56:40.270Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:56:40.271Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:56:44.907Z"}
+{"level":"info","message":"GET /auth/me - 1.90ms","timestamp":"2025-12-07T08:56:44.909Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:56:44.909Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:56:44.910Z"}
+{"level":"info","message":"GET /auth/me - 1.29ms","timestamp":"2025-12-07T08:56:44.911Z"}
+{"level":"info","message":{"duration":"1ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:56:44.911Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:56:52.161Z"}
+{"level":"info","message":"GET /auth/me - 2.55ms","timestamp":"2025-12-07T08:56:52.164Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:56:52.164Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:56:52.164Z"}
+{"level":"info","message":"GET /auth/me - 1.32ms","timestamp":"2025-12-07T08:56:52.166Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:56:52.166Z"}
