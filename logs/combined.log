@@ -3182,3 +3182,49 @@
 {"level":"info","message":"GET /auth/me - 0.25ms","timestamp":"2025-12-07T02:30:17.056Z"}
 {"level":"info","message":"GET /auth/me - 0.12ms","timestamp":"2025-12-07T02:30:17.057Z"}
 {"level":"info","message":"POST /auth/login - 0.19ms","timestamp":"2025-12-07T02:30:23.527Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-07T02:30:35.826Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:40.040Z"}
+{"level":"info","message":"POST /auth/login - 69.42ms","timestamp":"2025-12-07T02:30:40.100Z"}
+{"level":"info","message":{"duration":"62ms","method":"POST","statusCode":200,"type":"response","url":"/auth/login"},"timestamp":"2025-12-07T02:30:40.102Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:40.111Z"}
+{"level":"info","message":"GET /data - 6.80ms","timestamp":"2025-12-07T02:30:40.118Z"}
+{"level":"info","message":{"duration":"9ms","method":"GET","statusCode":200,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-07T02:30:40.120Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:40.121Z"}
+{"level":"info","message":"GET /data - 3.86ms","timestamp":"2025-12-07T02:30:40.125Z"}
+{"level":"info","message":{"duration":"4ms","method":"GET","statusCode":304,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-07T02:30:40.125Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/warehouses?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:42.540Z"}
+{"level":"info","message":"GET /warehouses?keyword= - 2.85ms","timestamp":"2025-12-07T02:30:42.543Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":304,"type":"response","url":"/warehouses?keyword=","userId":1},"timestamp":"2025-12-07T02:30:42.543Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/warehouses?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:42.544Z"}
+{"level":"info","message":"GET /warehouses?keyword= - 1.62ms","timestamp":"2025-12-07T02:30:42.545Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/warehouses?keyword=","userId":1},"timestamp":"2025-12-07T02:30:42.546Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/suppliers?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:43.114Z"}
+{"level":"info","message":"GET /suppliers?keyword= - 2.52ms","timestamp":"2025-12-07T02:30:43.116Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/suppliers?keyword=","userId":1},"timestamp":"2025-12-07T02:30:43.117Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/suppliers?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:43.117Z"}
+{"level":"info","message":"GET /suppliers?keyword= - 1.32ms","timestamp":"2025-12-07T02:30:43.118Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/suppliers?keyword=","userId":1},"timestamp":"2025-12-07T02:30:43.119Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/materials?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:44.644Z"}
+{"level":"info","message":"GET /materials?keyword= - 2.87ms","timestamp":"2025-12-07T02:30:44.646Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":304,"type":"response","url":"/materials?keyword=","userId":1},"timestamp":"2025-12-07T02:30:44.647Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/materials?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:44.647Z"}
+{"level":"info","message":"GET /materials?keyword= - 1.51ms","timestamp":"2025-12-07T02:30:44.649Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/materials?keyword=","userId":1},"timestamp":"2025-12-07T02:30:44.649Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:45.164Z"}
+{"level":"info","message":"GET /products?keyword= - 2.51ms","timestamp":"2025-12-07T02:30:45.166Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/products?keyword=","userId":1},"timestamp":"2025-12-07T02:30:45.166Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:45.167Z"}
+{"level":"info","message":"GET /products?keyword= - 1.26ms","timestamp":"2025-12-07T02:30:45.168Z"}
+{"level":"info","message":{"duration":"1ms","method":"GET","statusCode":304,"type":"response","url":"/products?keyword=","userId":1},"timestamp":"2025-12-07T02:30:45.168Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/users","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:49.436Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/roles","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:49.437Z"}
+{"level":"info","message":"GET /users - 4.02ms","timestamp":"2025-12-07T02:30:49.440Z"}
+{"level":"info","message":{"duration":"5ms","method":"GET","statusCode":200,"type":"response","url":"/users","userId":1},"timestamp":"2025-12-07T02:30:49.441Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/users","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:49.441Z"}
+{"level":"info","message":"GET /roles - 5.22ms","timestamp":"2025-12-07T02:30:49.443Z"}
+{"level":"info","message":{"duration":"6ms","method":"GET","statusCode":304,"type":"response","url":"/roles","userId":1},"timestamp":"2025-12-07T02:30:49.443Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/roles","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T02:30:49.443Z"}
+{"level":"info","message":"GET /users - 2.97ms","timestamp":"2025-12-07T02:30:49.444Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":304,"type":"response","url":"/users","userId":1},"timestamp":"2025-12-07T02:30:49.444Z"}
+{"level":"info","message":"GET /roles - 1.42ms","timestamp":"2025-12-07T02:30:49.445Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/roles","userId":1},"timestamp":"2025-12-07T02:30:49.445Z"}
