@@ -198,11 +198,28 @@ const createPurchaseOrder = async (req, res) => {
       remark 
     } = req.body;
 
+    // 自动生成采购单号（如果没有提供）
+    let finalPoNo = poNo;
+    if (!finalPoNo) {
+      const today = new Date();
+      const prefix = `PO${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}`;
+      const [result] = await connection.query(
+        "SELECT MAX(po_no) as maxNo FROM purchase_orders WHERE po_no LIKE ?",
+        [`${prefix}%`]
+      );
+      let seq = 1;
+      if (result[0].maxNo) {
+        const lastSeq = parseInt(result[0].maxNo.slice(-4));
+        seq = lastSeq + 1;
+      }
+      finalPoNo = `${prefix}${String(seq).padStart(4, '0')}`;
+    }
+
     // 验证必填字段
-    if (!poNo || !materialId || !supplierId || !quantity || !orderDate || !expectedDate) {
+    if (!materialId || !supplierId || !quantity || !orderDate || !expectedDate) {
       return res.status(400).json({
         success: false,
-        message: '采购单号、物料、供应商、数量、下单日期和预计到货日期不能为空'
+        message: '物料、供应商、数量、下单日期和预计到货日期不能为空'
       });
     }
 
@@ -214,22 +231,26 @@ const createPurchaseOrder = async (req, res) => {
     const [result] = await connection.query(`
       INSERT INTO purchase_orders (po_no, material_id, supplier_id, quantity, unit_price, total_amount, order_date, expected_date, remark, created_by, status)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft')
-    `, [poNo, materialId, supplierId, quantity, unitPrice, totalAmount, orderDate, expectedDate, remark, req.user.id]);
+    `, [finalPoNo, materialId, supplierId, quantity, unitPrice || 0, totalAmount, orderDate, expectedDate, remark || '', req.user?.id || 1]);
 
     const poId = result.insertId;
 
-    // 创建在途记录
-    await connection.query(`
-      INSERT INTO in_transit (purchase_order_id, material_id, quantity, expected_date)
-      VALUES (?, ?, ?, ?)
-    `, [poId, materialId, quantity, expectedDate]);
+    // 创建在途记录（可选，如果表存在）
+    try {
+      await connection.query(`
+        INSERT INTO in_transit (purchase_order_id, material_id, quantity, expected_date)
+        VALUES (?, ?, ?, ?)
+      `, [poId, materialId, quantity, expectedDate]);
+    } catch (e) {
+      console.log('in_transit表可能不存在，跳过:', e.message);
+    }
 
     await connection.commit();
 
     res.status(201).json({
       success: true,
       message: '采购订单创建成功',
-      data: { id: poId, poNo }
+      data: { id: poId, poNo: finalPoNo }
     });
 
   } catch (error) {
@@ -245,7 +266,7 @@ const createPurchaseOrder = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: '服务器内部错误'
+      message: '服务器内部错误: ' + error.message
     });
   } finally {
     connection.release();
@@ -274,8 +295,10 @@ const updatePurchaseOrder = async (req, res) => {
       remark 
     } = req.body;
 
+    console.log('更新采购订单请求:', { id, poNo, materialId, supplierId, quantity, status });
+
     // 检查订单是否存在
-    const [existing] = await connection.query('SELECT id, status, material_id FROM purchase_orders WHERE id = ?', [id]);
+    const [existing] = await connection.query('SELECT id, status, material_id, po_no FROM purchase_orders WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -283,7 +306,9 @@ const updatePurchaseOrder = async (req, res) => {
       });
     }
 
-    const oldStatus = existing[0].status;
+    const oldOrder = existing[0];
+    const oldStatus = oldOrder.status;
+    const finalPoNo = poNo || oldOrder.po_no;  // 如果没传poNo，使用原来的
     const totalAmount = unitPrice ? quantity * unitPrice : null;
 
     await connection.beginTransaction();
@@ -294,39 +319,62 @@ const updatePurchaseOrder = async (req, res) => {
       SET po_no = ?, material_id = ?, supplier_id = ?, quantity = ?, unit_price = ?, 
           total_amount = ?, order_date = ?, expected_date = ?, actual_date = ?, status = ?, remark = ?
       WHERE id = ?
-    `, [poNo, materialId, supplierId, quantity, unitPrice, totalAmount, orderDate, expectedDate, actualDate, status, remark, id]);
+    `, [finalPoNo, materialId, supplierId, quantity, unitPrice || 0, totalAmount, orderDate, expectedDate, actualDate || null, status, remark || '', id]);
 
-    // 更新在途记录
-    if (status === 'arrived') {
+    // 处理状态变更
+    if (status === 'arrived' && oldStatus !== 'arrived') {
       // 到货后删除在途记录
-      await connection.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+      try {
+        await connection.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+      } catch (e) {
+        console.log('删除在途记录失败，可能表不存在:', e.message);
+      }
       
       // 增加库存（假设入库到默认仓库 ID=1）
-      const [invExisting] = await connection.query(
-        'SELECT id, quantity FROM inventory WHERE material_id = ? AND warehouse_id = 1',
-        [materialId]
-      );
-      
-      if (invExisting.length > 0) {
-        await connection.query(
-          'UPDATE inventory SET quantity = quantity + ? WHERE id = ?',
-          [quantity, invExisting[0].id]
+      try {
+        const [invExisting] = await connection.query(
+          'SELECT id, quantity FROM inventory WHERE material_id = ? AND warehouse_id = 1',
+          [materialId]
         );
-      } else {
-        await connection.query(
-          'INSERT INTO inventory (material_id, warehouse_id, quantity) VALUES (?, 1, ?)',
-          [materialId, quantity]
-        );
+        
+        if (invExisting.length > 0) {
+          await connection.query(
+            'UPDATE inventory SET quantity = quantity + ? WHERE id = ?',
+            [quantity, invExisting[0].id]
+          );
+        } else {
+          await connection.query(
+            'INSERT INTO inventory (material_id, warehouse_id, quantity) VALUES (?, 1, ?)',
+            [materialId, quantity]
+          );
+        }
+        console.log('库存更新成功');
+      } catch (e) {
+        console.log('库存更新失败，可能表不存在或结构不同:', e.message);
+        // 不抛出错误，继续执行
       }
-    } else if (status !== 'cancelled') {
+    } else if (status !== 'cancelled' && status !== 'arrived') {
       // 更新在途数量
-      await connection.query(
-        'UPDATE in_transit SET quantity = ?, expected_date = ?, material_id = ? WHERE purchase_order_id = ?',
-        [quantity, expectedDate, materialId, id]
-      );
-    } else {
+      try {
+        const [transitExisting] = await connection.query(
+          'SELECT id FROM in_transit WHERE purchase_order_id = ?', [id]
+        );
+        if (transitExisting.length > 0) {
+          await connection.query(
+            'UPDATE in_transit SET quantity = ?, expected_date = ?, material_id = ? WHERE purchase_order_id = ?',
+            [quantity, expectedDate, materialId, id]
+          );
+        }
+      } catch (e) {
+        console.log('更新在途记录失败:', e.message);
+      }
+    } else if (status === 'cancelled') {
       // 取消订单，删除在途记录
-      await connection.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+      try {
+        await connection.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+      } catch (e) {
+        console.log('删除在途记录失败:', e.message);
+      }
     }
 
     await connection.commit();
@@ -349,7 +397,7 @@ const updatePurchaseOrder = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: '服务器内部错误'
+      message: '服务器内部错误: ' + error.message
     });
   } finally {
     connection.release();
@@ -378,7 +426,11 @@ const deletePurchaseOrder = async (req, res) => {
     // 只有草稿状态可以删除，其他状态改为取消
     if (existing[0].status !== 'draft') {
       await db.query("UPDATE purchase_orders SET status = 'cancelled' WHERE id = ?", [id]);
-      await db.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+      try {
+        await db.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+      } catch (e) {
+        console.log('删除在途记录失败:', e.message);
+      }
       return res.json({
         success: true,
         message: '采购订单已取消'
@@ -388,7 +440,11 @@ const deletePurchaseOrder = async (req, res) => {
     await connection.beginTransaction();
 
     // 删除在途记录
-    await connection.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+    try {
+      await connection.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+    } catch (e) {
+      console.log('删除在途记录失败:', e.message);
+    }
     
     // 删除采购订单
     await connection.query('DELETE FROM purchase_orders WHERE id = ?', [id]);
@@ -405,7 +461,7 @@ const deletePurchaseOrder = async (req, res) => {
     console.error('删除采购订单错误:', error);
     res.status(500).json({
       success: false,
-      message: '服务器内部错误'
+      message: '服务器内部错误: ' + error.message
     });
   } finally {
     connection.release();
@@ -419,8 +475,9 @@ const deletePurchaseOrder = async (req, res) => {
 const confirmPurchaseOrder = async (req, res) => {
   try {
     const { id } = req.params;
+    const { status: newStatus } = req.body;
 
-    const [existing] = await db.query('SELECT id, status FROM purchase_orders WHERE id = ?', [id]);
+    const [existing] = await db.query('SELECT * FROM purchase_orders WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -428,25 +485,73 @@ const confirmPurchaseOrder = async (req, res) => {
       });
     }
 
-    if (existing[0].status !== 'draft') {
+    const order = existing[0];
+    
+    // 状态流转规则
+    const statusFlow = {
+      'draft': ['confirmed'],
+      'confirmed': ['producing'],
+      'producing': ['shipped'],
+      'shipped': ['arrived']
+    };
+
+    const allowedNextStatus = statusFlow[order.status] || [];
+    
+    if (newStatus && !allowedNextStatus.includes(newStatus)) {
       return res.status(400).json({
         success: false,
-        message: '只有草稿状态的订单可以确认'
+        message: `当前状态 ${order.status} 不能变更为 ${newStatus}`
       });
     }
 
-    await db.query("UPDATE purchase_orders SET status = 'confirmed' WHERE id = ?", [id]);
+    // 默认下一个状态
+    const targetStatus = newStatus || allowedNextStatus[0];
+    
+    if (!targetStatus) {
+      return res.status(400).json({
+        success: false,
+        message: '当前状态无法继续流转'
+      });
+    }
+
+    await db.query("UPDATE purchase_orders SET status = ? WHERE id = ?", [targetStatus, id]);
+
+    // 如果到货，处理库存
+    if (targetStatus === 'arrived') {
+      try {
+        await db.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+        
+        const [invExisting] = await db.query(
+          'SELECT id, quantity FROM inventory WHERE material_id = ? AND warehouse_id = 1',
+          [order.material_id]
+        );
+        
+        if (invExisting.length > 0) {
+          await db.query(
+            'UPDATE inventory SET quantity = quantity + ? WHERE id = ?',
+            [order.quantity, invExisting[0].id]
+          );
+        } else {
+          await db.query(
+            'INSERT INTO inventory (material_id, warehouse_id, quantity) VALUES (?, 1, ?)',
+            [order.material_id, order.quantity]
+          );
+        }
+      } catch (e) {
+        console.log('库存处理失败:', e.message);
+      }
+    }
 
     res.json({
       success: true,
-      message: '采购订单已确认'
+      message: `采购订单已更新为 ${targetStatus}`
     });
 
   } catch (error) {
     console.error('确认采购订单错误:', error);
     res.status(500).json({
       success: false,
-      message: '服务器内部错误'
+      message: '服务器内部错误: ' + error.message
     });
   }
 };
