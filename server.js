@@ -57,26 +57,17 @@ app.use(helmet({
 }));
 
 // ============ CORS 配置优化 ============
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:5173', 'http://localhost:3000', 'https://supply-dashboard-zk6s.onrender.com'];
-
+// ============ CORS（先全部放开，方便调试） ============
 app.use(cors({
-  origin: (origin, callback) => {
-    // 允许无 origin 的请求（比如移动应用、Postman）
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
+  origin: true,          // 自动反射请求的 Origin
+  credentials: true,     // 如果以后要带 cookie / Authorization 头，先开着没问题
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  maxAge: 86400 // 24小时预检缓存
+  maxAge: 86400,
 }));
+
+// 处理预检请求（OPTIONS）
+app.options('*', cors());
 
 // ============ 性能优化中间件 ============
 // Gzip 压缩
