@@ -4170,3 +4170,35 @@
 {"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:56:52.164Z"}
 {"level":"info","message":"GET /auth/me - 1.32ms","timestamp":"2025-12-07T08:56:52.166Z"}
 {"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:56:52.166Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-07T08:58:52.229Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:58:53.026Z"}
+{"level":"info","message":"GET /auth/me - 5.80ms","timestamp":"2025-12-07T08:58:53.031Z"}
+{"level":"info","message":{"duration":"6ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:58:53.032Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:58:53.033Z"}
+{"level":"info","message":"GET /auth/me - 2.48ms","timestamp":"2025-12-07T08:58:53.035Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:58:53.036Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:58:56.600Z"}
+{"level":"info","message":"GET /auth/me - 2.33ms","timestamp":"2025-12-07T08:58:56.602Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:58:56.602Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:58:56.603Z"}
+{"level":"info","message":"GET /auth/me - 1.62ms","timestamp":"2025-12-07T08:58:56.605Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T08:58:56.605Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:59:10.902Z"}
+{"level":"info","message":"GET /auth/me - 3.14ms","timestamp":"2025-12-07T08:59:10.905Z"}
+{"level":"info","message":{"duration":"4ms","method":"GET","statusCode":200,"type":"response","url":"/auth/me","userId":2},"timestamp":"2025-12-07T08:59:10.906Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:59:10.907Z"}
+{"level":"info","message":"GET /auth/me - 1.58ms","timestamp":"2025-12-07T08:59:10.908Z"}
+{"level":"info","message":{"duration":"1ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":2},"timestamp":"2025-12-07T08:59:10.908Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:59:18.505Z"}
+{"level":"info","message":"GET /auth/me - 1.69ms","timestamp":"2025-12-07T08:59:18.507Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":2},"timestamp":"2025-12-07T08:59:18.507Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T08:59:18.508Z"}
+{"level":"info","message":"GET /auth/me - 1.16ms","timestamp":"2025-12-07T08:59:18.509Z"}
+{"level":"info","message":{"duration":"1ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":2},"timestamp":"2025-12-07T08:59:18.509Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-07T09:09:15.567Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T09:09:16.308Z"}
+{"level":"info","message":"GET /auth/me - 6.14ms","timestamp":"2025-12-07T09:09:16.313Z"}
+{"level":"info","message":{"duration":"6ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":2},"timestamp":"2025-12-07T09:09:16.314Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T09:09:16.314Z"}
+{"level":"info","message":"GET /auth/me - 1.55ms","timestamp":"2025-12-07T09:09:16.316Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":2},"timestamp":"2025-12-07T09:09:16.316Z"}
