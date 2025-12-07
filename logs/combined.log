@@ -5158,3 +5158,8 @@
 {"level":"info","message":"GET /sales-orders - 473.54ms","timestamp":"2025-12-07T23:03:56.375Z"}
 {"level":"info","message":{"duration":"474ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T23:03:56.375Z"}
 {"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T23:04:36.802Z"}
+{"level":"info","message":"POST /sales-orders - 469.19ms","timestamp":"2025-12-07T23:04:37.271Z"}
+{"level":"info","message":{"duration":"469ms","method":"POST","statusCode":500,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T23:04:37.271Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T23:04:51.162Z"}
+{"level":"info","message":"POST /sales-orders - 467.36ms","timestamp":"2025-12-07T23:04:51.629Z"}
+{"level":"info","message":{"duration":"468ms","method":"POST","statusCode":500,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T23:04:51.630Z"}
