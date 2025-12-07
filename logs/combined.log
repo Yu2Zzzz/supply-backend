@@ -4937,3 +4937,134 @@
 {"level":"info","message":{"duration":"4ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-07T21:23:14.976Z"}
 {"level":"info","message":"GET /sales-orders - 6.19ms","timestamp":"2025-12-07T21:23:14.977Z"}
 {"level":"info","message":{"duration":"7ms","method":"GET","statusCode":200,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T21:23:14.978Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-07T21:34:20.663Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.377Z"}
+{"level":"info","message":"GET /auth/me - 5.79ms","timestamp":"2025-12-07T21:34:21.382Z"}
+{"level":"info","message":{"duration":"6ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T21:34:21.383Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.383Z"}
+{"level":"info","message":"GET /auth/me - 1.41ms","timestamp":"2025-12-07T21:34:21.385Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T21:34:21.385Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.386Z"}
+{"level":"info","message":"GET /auth/me - 1.20ms","timestamp":"2025-12-07T21:34:21.387Z"}
+{"level":"info","message":{"duration":"1ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T21:34:21.387Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.388Z"}
+{"level":"info","message":"GET /auth/me - 1.42ms","timestamp":"2025-12-07T21:34:21.389Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T21:34:21.390Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.396Z"}
+{"level":"info","message":"GET /data - 7.73ms","timestamp":"2025-12-07T21:34:21.404Z"}
+{"level":"info","message":{"duration":"10ms","method":"GET","statusCode":200,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-07T21:34:21.406Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.407Z"}
+{"level":"info","message":"GET /data - 5.18ms","timestamp":"2025-12-07T21:34:21.412Z"}
+{"level":"info","message":{"duration":"5ms","method":"GET","statusCode":304,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-07T21:34:21.412Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.413Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.417Z"}
+{"level":"info","message":"GET /data - 5.39ms","timestamp":"2025-12-07T21:34:21.418Z"}
+{"level":"info","message":{"duration":"5ms","method":"GET","statusCode":304,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-07T21:34:21.418Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.419Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.420Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.421Z"}
+{"level":"info","message":"GET /customers - 5.01ms","timestamp":"2025-12-07T21:34:21.424Z"}
+{"level":"info","message":{"duration":"5ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-07T21:34:21.424Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.426Z"}
+{"level":"info","message":"GET /customers - 3.06ms","timestamp":"2025-12-07T21:34:21.429Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-07T21:34:21.429Z"}
+{"level":"info","message":"GET /products - 10.44ms","timestamp":"2025-12-07T21:34:21.432Z"}
+{"level":"info","message":{"duration":"11ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-07T21:34:21.432Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.434Z"}
+{"level":"info","message":"GET /sales-orders - 17.40ms","timestamp":"2025-12-07T21:34:21.434Z"}
+{"level":"info","message":{"duration":"17ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T21:34:21.435Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:21.436Z"}
+{"level":"info","message":"GET /products - 3.39ms","timestamp":"2025-12-07T21:34:21.437Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-07T21:34:21.437Z"}
+{"level":"info","message":"GET /data - 18.28ms","timestamp":"2025-12-07T21:34:21.439Z"}
+{"level":"info","message":{"duration":"19ms","method":"GET","statusCode":304,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-07T21:34:21.439Z"}
+{"level":"info","message":"GET /sales-orders - 4.77ms","timestamp":"2025-12-07T21:34:21.440Z"}
+{"level":"info","message":{"duration":"5ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T21:34:21.441Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:23.864Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:23.865Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:23.866Z"}
+{"level":"info","message":"GET /customers - 3.23ms","timestamp":"2025-12-07T21:34:23.869Z"}
+{"level":"info","message":{"duration":"4ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-07T21:34:23.869Z"}
+{"level":"info","message":"GET /products - 3.13ms","timestamp":"2025-12-07T21:34:23.869Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-07T21:34:23.869Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:23.870Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:23.871Z"}
+{"level":"info","message":"GET /sales-orders - 9.11ms","timestamp":"2025-12-07T21:34:23.873Z"}
+{"level":"info","message":{"duration":"9ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T21:34:23.873Z"}
+{"level":"info","message":"GET /customers - 3.37ms","timestamp":"2025-12-07T21:34:23.873Z"}
+{"level":"info","message":{"duration":"4ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-07T21:34:23.874Z"}
+{"level":"info","message":"GET /products - 3.34ms","timestamp":"2025-12-07T21:34:23.874Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-07T21:34:23.874Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:23.875Z"}
+{"level":"info","message":"GET /sales-orders - 2.71ms","timestamp":"2025-12-07T21:34:23.877Z"}
+{"level":"info","message":{"duration":"2ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T21:34:23.877Z"}
+{"level":"info","message":{"ip":"::1","method":"PUT","type":"request","url":"/api/sales-orders/1","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:29.396Z"}
+{"level":"info","message":"PUT /sales-orders/1 - 15.01ms","timestamp":"2025-12-07T21:34:29.403Z"}
+{"level":"info","message":{"duration":"7ms","method":"PUT","statusCode":200,"type":"response","url":"/sales-orders/1","userId":1},"timestamp":"2025-12-07T21:34:29.403Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:29.405Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:29.406Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T21:34:29.407Z"}
+{"level":"info","message":"GET /customers - 3.32ms","timestamp":"2025-12-07T21:34:29.409Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-07T21:34:29.409Z"}
+{"level":"info","message":"GET /products - 3.92ms","timestamp":"2025-12-07T21:34:29.410Z"}
+{"level":"info","message":{"duration":"4ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-07T21:34:29.411Z"}
+{"level":"info","message":"GET /sales-orders - 6.99ms","timestamp":"2025-12-07T21:34:29.412Z"}
+{"level":"info","message":{"duration":"8ms","method":"GET","statusCode":200,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T21:34:29.413Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-07T22:04:20.393Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:04:21.106Z"}
+{"level":"info","message":"GET /auth/me - 580.40ms","timestamp":"2025-12-07T22:04:21.686Z"}
+{"level":"info","message":{"duration":"583ms","method":"GET","statusCode":500,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T22:04:21.689Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/auth/me","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:04:21.690Z"}
+{"level":"info","message":"GET /auth/me - 641.04ms","timestamp":"2025-12-07T22:04:22.331Z"}
+{"level":"info","message":{"duration":"642ms","method":"GET","statusCode":500,"type":"response","url":"/auth/me","userId":1},"timestamp":"2025-12-07T22:04:22.332Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:05:23.132Z"}
+{"level":"info","message":"POST /auth/login - 690.42ms","timestamp":"2025-12-07T22:05:23.814Z"}
+{"level":"info","message":{"duration":"683ms","method":"POST","statusCode":500,"type":"response","url":"/auth/login"},"timestamp":"2025-12-07T22:05:23.815Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-07T22:08:29.324Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:08:56.413Z"}
+{"level":"info","message":"POST /auth/login - 256.79ms","timestamp":"2025-12-07T22:08:56.662Z"}
+{"level":"info","message":{"duration":"250ms","method":"POST","statusCode":200,"type":"response","url":"/auth/login"},"timestamp":"2025-12-07T22:08:56.663Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:08:56.672Z"}
+{"level":"info","message":"GET /data - 721.28ms","timestamp":"2025-12-07T22:08:57.393Z"}
+{"level":"info","message":{"duration":"723ms","method":"GET","statusCode":200,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-07T22:08:57.395Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:08:57.396Z"}
+{"level":"info","message":"GET /data - 618.43ms","timestamp":"2025-12-07T22:08:58.014Z"}
+{"level":"info","message":{"duration":"618ms","method":"GET","statusCode":304,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-07T22:08:58.014Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:08:59.726Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:08:59.728Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:08:59.730Z"}
+{"level":"info","message":"GET /sales-orders - 479.86ms","timestamp":"2025-12-07T22:09:00.206Z"}
+{"level":"info","message":{"duration":"481ms","method":"GET","statusCode":200,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T22:09:00.207Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:09:00.208Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:09:00.631Z"}
+{"level":"info","message":"GET /sales-orders - 442.38ms","timestamp":"2025-12-07T22:09:00.650Z"}
+{"level":"info","message":{"duration":"443ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-07T22:09:00.651Z"}
+{"level":"info","message":"GET /products - 923.37ms","timestamp":"2025-12-07T22:09:00.653Z"}
+{"level":"info","message":{"duration":"924ms","method":"GET","statusCode":200,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-07T22:09:00.654Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:09:00.655Z"}
+{"level":"info","message":"GET /products - 197.79ms","timestamp":"2025-12-07T22:09:00.853Z"}
+{"level":"info","message":{"duration":"198ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-07T22:09:00.853Z"}
+{"level":"info","message":"GET /customers - 1213.59ms","timestamp":"2025-12-07T22:09:00.941Z"}
+{"level":"info","message":{"duration":"1214ms","method":"GET","statusCode":200,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-07T22:09:00.942Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:09:00.943Z"}
+{"level":"info","message":"GET /customers - 216.55ms","timestamp":"2025-12-07T22:09:01.160Z"}
+{"level":"info","message":{"duration":"217ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-07T22:09:01.160Z"}
+{"level":"info","message":"GET /products?keyword= - 609.66ms","timestamp":"2025-12-07T22:09:01.241Z"}
+{"level":"info","message":{"duration":"611ms","method":"GET","statusCode":200,"type":"response","url":"/products?keyword=","userId":1},"timestamp":"2025-12-07T22:09:01.242Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:09:01.242Z"}
+{"level":"info","message":"GET /products?keyword= - 199.62ms","timestamp":"2025-12-07T22:09:01.442Z"}
+{"level":"info","message":{"duration":"200ms","method":"GET","statusCode":304,"type":"response","url":"/products?keyword=","userId":1},"timestamp":"2025-12-07T22:09:01.442Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:33:35.444Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:33:35.445Z"}
+{"level":"info","message":"GET /products?keyword= - 192.55ms","timestamp":"2025-12-07T22:33:35.636Z"}
+{"level":"info","message":{"duration":"193ms","method":"GET","statusCode":304,"type":"response","url":"/products?keyword=","userId":1},"timestamp":"2025-12-07T22:33:35.637Z"}
+{"level":"info","message":"GET /data - 693.96ms","timestamp":"2025-12-07T22:33:36.139Z"}
+{"level":"info","message":{"duration":"695ms","method":"GET","statusCode":200,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-07T22:33:36.140Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:33:36.149Z"}
+{"level":"info","message":"GET /products?keyword= - 193.73ms","timestamp":"2025-12-07T22:33:36.343Z"}
+{"level":"info","message":{"duration":"194ms","method":"GET","statusCode":304,"type":"response","url":"/products?keyword=","userId":1},"timestamp":"2025-12-07T22:33:36.343Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products?keyword=","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-07T22:33:36.344Z"}
+{"level":"info","message":"GET /products?keyword= - 192.77ms","timestamp":"2025-12-07T22:33:36.536Z"}
+{"level":"info","message":{"duration":"193ms","method":"GET","statusCode":304,"type":"response","url":"/products?keyword=","userId":1},"timestamp":"2025-12-07T22:33:36.537Z"}
+{"ip":"::1","level":"error","message":"Not allowed by CORS","method":"OPTIONS","stack":"Error: Not allowed by CORS\n    at origin (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\server.js:72:16)\n    at C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\cors\\lib\\index.js:219:13\n    at optionsCallback (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\cors\\lib\\index.js:199:9)\n    at corsMiddleware (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\cors\\lib\\index.js:204:7)\n    at Layer.handle [as handle_request] (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at internalNext (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\helmet\\index.cjs:531:6)","timestamp":"2025-12-07T22:33:44.212Z","type":"error","url":"/api/auth/login"}
+{"ip":"::1","level":"error","message":"Not allowed by CORS","method":"OPTIONS","stack":"Error: Not allowed by CORS\n    at origin (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\server.js:72:16)\n    at C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\cors\\lib\\index.js:219:13\n    at optionsCallback (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\cors\\lib\\index.js:199:9)\n    at corsMiddleware (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\cors\\lib\\index.js:204:7)\n    at Layer.handle [as handle_request] (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at internalNext (C:\\Users\\Howard\\OneDrive - Northeastern University\\Desktop\\AI\\supply-chain-foreend\\backend\\node_modules\\helmet\\index.cjs:531:6)","timestamp":"2025-12-07T22:33:45.610Z","type":"error","url":"/api/auth/login"}
