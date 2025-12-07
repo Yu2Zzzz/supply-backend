@@ -14,6 +14,7 @@ const supplierController = require('../controllers/supplierController');
 const warehouseController = require('../controllers/warehouseController');
 const materialController = require('../controllers/materialController');
 const purchaseController = require('../controllers/purchaseController');
+const inventoryController = require('../controllers/inventoryController');
 
 // ==================== 认证路由（无需登录） ====================
 router.post('/auth/login', authController.login);
@@ -164,6 +165,15 @@ router.get('/warehouses/:id', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), ware
 router.post('/warehouses', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), warehouseController.createWarehouse);
 router.put('/warehouses/:id', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), warehouseController.updateWarehouse);
 router.delete('/warehouses/:id', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), warehouseController.deleteWarehouse);
+
+// ==================== 库存管理 ====================
+// 管理员 + 采购员
+router.get('/inventory', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), inventoryController.getInventory);
+router.get('/inventory/:id', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), inventoryController.getInventoryById);
+router.post('/inventory', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), inventoryController.createInventory);
+router.put('/inventory/:id', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), inventoryController.updateInventory);
+router.delete('/inventory/:id', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), inventoryController.deleteInventory);
+router.post('/inventory/:id/adjust', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), inventoryController.adjustInventory);
 
 // ==================== 物料管理 ====================
 // 管理员 + 采购员
