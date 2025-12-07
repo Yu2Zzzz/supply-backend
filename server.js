@@ -59,7 +59,7 @@ app.use(helmet({
 // ============ CORS 配置优化 ============
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:5173', 'http://localhost:3000'， 'https://supply-dashboard-zk6s.onrender.com'];
+  : ['http://localhost:5173', 'http://localhost:3000', 'https://supply-dashboard-zk6s.onrender.com'];
 
 app.use(cors({
   origin: (origin, callback) => {
