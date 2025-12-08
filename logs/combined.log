@@ -6101,3 +6101,151 @@
 {"level":"info","message":"GET /auth/me - 0.26ms","timestamp":"2025-12-08T01:42:19.833Z"}
 {"level":"info","message":"GET /auth/me - 0.12ms","timestamp":"2025-12-08T01:42:19.834Z"}
 {"level":"info","message":"POST /auth/login - 0.20ms","timestamp":"2025-12-08T01:42:23.072Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-08T01:42:37.289Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:41.348Z"}
+{"level":"info","message":"POST /auth/login - 267.01ms","timestamp":"2025-12-08T01:42:41.606Z"}
+{"level":"info","message":{"duration":"259ms","method":"POST","statusCode":200,"type":"response","url":"/auth/login"},"timestamp":"2025-12-08T01:42:41.607Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:41.616Z"}
+{"level":"info","message":"GET /data - 676.55ms","timestamp":"2025-12-08T01:42:42.293Z"}
+{"level":"info","message":{"duration":"677ms","method":"GET","statusCode":304,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-08T01:42:42.293Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:42.294Z"}
+{"level":"info","message":"GET /data - 662.59ms","timestamp":"2025-12-08T01:42:42.956Z"}
+{"level":"info","message":{"duration":"663ms","method":"GET","statusCode":304,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-08T01:42:42.957Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/purchase-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:43.416Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/materials","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:43.418Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/suppliers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:43.419Z"}
+{"level":"info","message":"GET /purchase-orders - 195.54ms","timestamp":"2025-12-08T01:42:43.611Z"}
+{"level":"info","message":{"duration":"195ms","method":"GET","statusCode":304,"type":"response","url":"/purchase-orders","userId":1},"timestamp":"2025-12-08T01:42:43.611Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/purchase-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:43.612Z"}
+{"level":"info","message":"GET /purchase-orders - 226.80ms","timestamp":"2025-12-08T01:42:43.839Z"}
+{"level":"info","message":{"duration":"227ms","method":"GET","statusCode":304,"type":"response","url":"/purchase-orders","userId":1},"timestamp":"2025-12-08T01:42:43.839Z"}
+{"level":"info","message":"GET /suppliers - 732.60ms","timestamp":"2025-12-08T01:42:44.151Z"}
+{"level":"info","message":{"duration":"732ms","method":"GET","statusCode":304,"type":"response","url":"/suppliers","userId":1},"timestamp":"2025-12-08T01:42:44.151Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/suppliers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:44.152Z"}
+{"level":"info","message":"GET /suppliers - 197.92ms","timestamp":"2025-12-08T01:42:44.350Z"}
+{"level":"info","message":{"duration":"199ms","method":"GET","statusCode":304,"type":"response","url":"/suppliers","userId":1},"timestamp":"2025-12-08T01:42:44.351Z"}
+{"level":"info","message":"GET /materials - 2213.27ms","timestamp":"2025-12-08T01:42:45.631Z"}
+{"level":"info","message":{"duration":"2213ms","method":"GET","statusCode":304,"type":"response","url":"/materials","userId":1},"timestamp":"2025-12-08T01:42:45.631Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/materials","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:45.632Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:46.265Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:46.266Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:46.267Z"}
+{"level":"info","message":"GET /materials - 791.69ms","timestamp":"2025-12-08T01:42:46.424Z"}
+{"level":"info","message":{"duration":"792ms","method":"GET","statusCode":304,"type":"response","url":"/materials","userId":1},"timestamp":"2025-12-08T01:42:46.424Z"}
+{"level":"info","message":"GET /customers - 195.70ms","timestamp":"2025-12-08T01:42:46.462Z"}
+{"level":"info","message":{"duration":"198ms","method":"GET","statusCode":200,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-08T01:42:46.464Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:46.464Z"}
+{"level":"info","message":"GET /customers - 192.23ms","timestamp":"2025-12-08T01:42:46.656Z"}
+{"level":"info","message":{"duration":"192ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-08T01:42:46.656Z"}
+{"level":"info","message":"GET /sales-orders - 612.15ms","timestamp":"2025-12-08T01:42:46.876Z"}
+{"level":"info","message":{"duration":"612ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-08T01:42:46.877Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:46.877Z"}
+{"level":"info","message":"GET /products - 617.10ms","timestamp":"2025-12-08T01:42:46.884Z"}
+{"level":"info","message":{"duration":"618ms","method":"GET","statusCode":200,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-08T01:42:46.885Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:42:46.885Z"}
+{"level":"info","message":"GET /products - 223.92ms","timestamp":"2025-12-08T01:42:47.109Z"}
+{"level":"info","message":{"duration":"224ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-08T01:42:47.109Z"}
+{"level":"info","message":"GET /sales-orders - 570.47ms","timestamp":"2025-12-08T01:42:47.448Z"}
+{"level":"info","message":{"duration":"571ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-08T01:42:47.448Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:03.187Z"}
+{"level":"info","message":"POST /auth/login - 242.61ms","timestamp":"2025-12-08T01:43:03.429Z"}
+{"level":"info","message":{"duration":"243ms","method":"POST","statusCode":200,"type":"response","url":"/auth/login"},"timestamp":"2025-12-08T01:43:03.430Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:03.438Z"}
+{"level":"info","message":"GET /data - 198.53ms","timestamp":"2025-12-08T01:43:03.637Z"}
+{"level":"info","message":{"duration":"200ms","method":"GET","statusCode":200,"type":"response","url":"/data","userId":2},"timestamp":"2025-12-08T01:43:03.638Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:03.639Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:03.644Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:03.645Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:03.645Z"}
+{"level":"info","message":"GET /data - 198.43ms","timestamp":"2025-12-08T01:43:03.838Z"}
+{"level":"info","message":{"duration":"199ms","method":"GET","statusCode":304,"type":"response","url":"/data","userId":2},"timestamp":"2025-12-08T01:43:03.838Z"}
+{"level":"info","message":"GET /customers - 216.25ms","timestamp":"2025-12-08T01:43:03.861Z"}
+{"level":"info","message":{"duration":"216ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":2},"timestamp":"2025-12-08T01:43:03.861Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:03.862Z"}
+{"level":"info","message":"GET /customers - 187.60ms","timestamp":"2025-12-08T01:43:04.049Z"}
+{"level":"info","message":{"duration":"187ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":2},"timestamp":"2025-12-08T01:43:04.049Z"}
+{"level":"info","message":"GET /sales-orders - 628.12ms","timestamp":"2025-12-08T01:43:04.272Z"}
+{"level":"info","message":{"duration":"628ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":2},"timestamp":"2025-12-08T01:43:04.272Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:04.273Z"}
+{"level":"info","message":"GET /products - 679.67ms","timestamp":"2025-12-08T01:43:04.325Z"}
+{"level":"info","message":{"duration":"680ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":2},"timestamp":"2025-12-08T01:43:04.325Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:04.326Z"}
+{"level":"info","message":"GET /products - 487.29ms","timestamp":"2025-12-08T01:43:04.813Z"}
+{"level":"info","message":{"duration":"487ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":2},"timestamp":"2025-12-08T01:43:04.813Z"}
+{"level":"info","message":"GET /sales-orders - 596.35ms","timestamp":"2025-12-08T01:43:04.869Z"}
+{"level":"info","message":{"duration":"596ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":2},"timestamp":"2025-12-08T01:43:04.869Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:30.291Z"}
+{"level":"info","message":"POST /auth/login - 236.23ms","timestamp":"2025-12-08T01:43:30.527Z"}
+{"level":"info","message":{"duration":"236ms","method":"POST","statusCode":200,"type":"response","url":"/auth/login"},"timestamp":"2025-12-08T01:43:30.527Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:30.535Z"}
+{"level":"info","message":"GET /data - 676.35ms","timestamp":"2025-12-08T01:43:31.211Z"}
+{"level":"info","message":{"duration":"677ms","method":"GET","statusCode":200,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-08T01:43:31.212Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/data","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:31.213Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:31.219Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:31.220Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:31.220Z"}
+{"level":"info","message":"GET /customers - 203.04ms","timestamp":"2025-12-08T01:43:31.423Z"}
+{"level":"info","message":{"duration":"203ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-08T01:43:31.423Z"}
+{"level":"info","message":"GET /products - 203.19ms","timestamp":"2025-12-08T01:43:31.423Z"}
+{"level":"info","message":{"duration":"204ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-08T01:43:31.424Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:31.425Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:31.426Z"}
+{"level":"info","message":"GET /customers - 187.08ms","timestamp":"2025-12-08T01:43:31.611Z"}
+{"level":"info","message":{"duration":"187ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-08T01:43:31.611Z"}
+{"level":"info","message":"GET /products - 193.02ms","timestamp":"2025-12-08T01:43:31.619Z"}
+{"level":"info","message":{"duration":"193ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-08T01:43:31.619Z"}
+{"level":"info","message":"GET /sales-orders - 584.51ms","timestamp":"2025-12-08T01:43:31.803Z"}
+{"level":"info","message":{"duration":"584ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-08T01:43:31.803Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:31.804Z"}
+{"level":"info","message":"GET /data - 679.98ms","timestamp":"2025-12-08T01:43:31.893Z"}
+{"level":"info","message":{"duration":"680ms","method":"GET","statusCode":304,"type":"response","url":"/data","userId":1},"timestamp":"2025-12-08T01:43:31.893Z"}
+{"level":"info","message":"GET /sales-orders - 582.75ms","timestamp":"2025-12-08T01:43:32.387Z"}
+{"level":"info","message":{"duration":"583ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-08T01:43:32.387Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/purchase-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:33.901Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/materials","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:33.902Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/suppliers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:33.903Z"}
+{"level":"info","message":"GET /materials - 193.84ms","timestamp":"2025-12-08T01:43:34.096Z"}
+{"level":"info","message":{"duration":"194ms","method":"GET","statusCode":304,"type":"response","url":"/materials","userId":1},"timestamp":"2025-12-08T01:43:34.096Z"}
+{"level":"info","message":"GET /purchase-orders - 196.28ms","timestamp":"2025-12-08T01:43:34.097Z"}
+{"level":"info","message":{"duration":"196ms","method":"GET","statusCode":304,"type":"response","url":"/purchase-orders","userId":1},"timestamp":"2025-12-08T01:43:34.097Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/materials","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:34.098Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/purchase-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:34.098Z"}
+{"level":"info","message":"GET /suppliers - 196.55ms","timestamp":"2025-12-08T01:43:34.099Z"}
+{"level":"info","message":{"duration":"196ms","method":"GET","statusCode":304,"type":"response","url":"/suppliers","userId":1},"timestamp":"2025-12-08T01:43:34.099Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/suppliers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:34.100Z"}
+{"level":"info","message":"GET /suppliers - 190.54ms","timestamp":"2025-12-08T01:43:34.290Z"}
+{"level":"info","message":{"duration":"191ms","method":"GET","statusCode":304,"type":"response","url":"/suppliers","userId":1},"timestamp":"2025-12-08T01:43:34.291Z"}
+{"level":"info","message":"GET /purchase-orders - 193.86ms","timestamp":"2025-12-08T01:43:34.292Z"}
+{"level":"info","message":{"duration":"194ms","method":"GET","statusCode":304,"type":"response","url":"/purchase-orders","userId":1},"timestamp":"2025-12-08T01:43:34.292Z"}
+{"level":"info","message":"GET /materials - 195.56ms","timestamp":"2025-12-08T01:43:34.293Z"}
+{"level":"info","message":{"duration":"195ms","method":"GET","statusCode":304,"type":"response","url":"/materials","userId":1},"timestamp":"2025-12-08T01:43:34.293Z"}
+{"level":"info","message":{"ip":"::1","method":"PUT","type":"request","url":"/api/purchase-orders/3","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:34.723Z"}
+{"level":"info","message":"PUT /purchase-orders/3 - 685.07ms","timestamp":"2025-12-08T01:43:35.408Z"}
+{"level":"info","message":{"duration":"685ms","method":"PUT","statusCode":200,"type":"response","url":"/purchase-orders/3","userId":1},"timestamp":"2025-12-08T01:43:35.408Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/purchase-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:35.410Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/materials","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:35.411Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/suppliers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:35.412Z"}
+{"level":"info","message":"GET /suppliers - 190.63ms","timestamp":"2025-12-08T01:43:35.602Z"}
+{"level":"info","message":{"duration":"191ms","method":"GET","statusCode":304,"type":"response","url":"/suppliers","userId":1},"timestamp":"2025-12-08T01:43:35.603Z"}
+{"level":"info","message":"GET /purchase-orders - 193.77ms","timestamp":"2025-12-08T01:43:35.604Z"}
+{"level":"info","message":{"duration":"195ms","method":"GET","statusCode":200,"type":"response","url":"/purchase-orders","userId":1},"timestamp":"2025-12-08T01:43:35.605Z"}
+{"level":"info","message":"GET /materials - 194.16ms","timestamp":"2025-12-08T01:43:35.605Z"}
+{"level":"info","message":{"duration":"195ms","method":"GET","statusCode":200,"type":"response","url":"/materials","userId":1},"timestamp":"2025-12-08T01:43:35.606Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:36.824Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:36.825Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:36.826Z"}
+{"level":"info","message":"GET /products - 189.72ms","timestamp":"2025-12-08T01:43:37.015Z"}
+{"level":"info","message":{"duration":"190ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-08T01:43:37.016Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/products","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:37.016Z"}
+{"level":"info","message":"GET /customers - 196.83ms","timestamp":"2025-12-08T01:43:37.022Z"}
+{"level":"info","message":{"duration":"197ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-08T01:43:37.022Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/customers","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:37.022Z"}
+{"level":"info","message":"GET /products - 187.05ms","timestamp":"2025-12-08T01:43:37.203Z"}
+{"level":"info","message":{"duration":"188ms","method":"GET","statusCode":304,"type":"response","url":"/products","userId":1},"timestamp":"2025-12-08T01:43:37.204Z"}
+{"level":"info","message":"GET /customers - 203.85ms","timestamp":"2025-12-08T01:43:37.226Z"}
+{"level":"info","message":{"duration":"204ms","method":"GET","statusCode":304,"type":"response","url":"/customers","userId":1},"timestamp":"2025-12-08T01:43:37.226Z"}
+{"level":"info","message":"GET /sales-orders - 582.95ms","timestamp":"2025-12-08T01:43:37.403Z"}
+{"level":"info","message":{"duration":"579ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-08T01:43:37.403Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-08T01:43:37.404Z"}
+{"level":"info","message":"GET /sales-orders - 589.17ms","timestamp":"2025-12-08T01:43:37.993Z"}
+{"level":"info","message":{"duration":"589ms","method":"GET","statusCode":304,"type":"response","url":"/sales-orders","userId":1},"timestamp":"2025-12-08T01:43:37.993Z"}
