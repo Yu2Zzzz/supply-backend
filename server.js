@@ -130,14 +130,15 @@ const apiLimiter = rateLimit({
 
 // 登录限流（最严格）
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
+  windowMs: 60 * 1000,   // 1 分钟
+  max: 50,               // 1 分钟 50 次
   skipSuccessfulRequests: true,
   message: {
     success: false,
-    message: '登录尝试次数过多，请15分钟后再试'
+    message: '登录尝试次数过多，请稍后再试'
   }
 });
+
 
 app.use(globalLimiter);
 app.use('/api/', apiLimiter);
