@@ -38,6 +38,12 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// 🚀 修复 Railway / Docker / Nginx 代理导致的 Rate Limit 报错
+// 必须在使用 rateLimit 之前设置
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // 表示信任一层反向代理
+}
+
 // ============ 安全中间件 ============
 // Helmet - 设置安全的 HTTP 头
 app.use(helmet({

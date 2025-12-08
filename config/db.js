@@ -29,7 +29,6 @@ const poolConfig = {
   
   // ✅ 超时配置
   connectTimeout: 10000, // 连接超时 10秒
-  acquireTimeout: 10000, // 获取连接超时 10秒
   
   // ✅ 调试（生产环境关闭）
   debug: process.env.NODE_ENV === 'development' ? false : false
