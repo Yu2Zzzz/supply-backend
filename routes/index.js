@@ -22,6 +22,7 @@ router.post('/auth/login', authController.login);
 // ==================== 需要登录的路由 ====================
 router.use(authMiddleware); // 以下所有路由都需要登录
 
+
 // 获取当前用户信息
 router.get('/auth/me', authController.getCurrentUser);
 router.post('/auth/change-password', authController.changePassword);
@@ -33,7 +34,7 @@ router.post('/users', roleMiddleware(PERMISSIONS.ADMIN_ONLY), userController.cre
 router.put('/users/:id', roleMiddleware(PERMISSIONS.ADMIN_ONLY), userController.updateUser);
 router.post('/users/:id/reset-password', roleMiddleware(PERMISSIONS.ADMIN_ONLY), userController.resetPassword);
 router.delete('/users/:id', roleMiddleware(PERMISSIONS.ADMIN_ONLY), userController.deleteUser);
-
+router.post('/users/:id/restore', authMiddleware, roleMiddleware(['admin']), userController.restoreUser);
 // ==================== 产品管理（优化权限） ====================
 // ✅ 修复：业务员需要读取产品列表来创建订单
 router.get('/products', roleMiddleware(PERMISSIONS.ALL_ROLES), productController.getProducts);

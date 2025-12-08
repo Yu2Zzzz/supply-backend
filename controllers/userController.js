@@ -1,18 +1,30 @@
-// backend/controllers/userController.js - 修复版
+// backend/controllers/userController.js - 支持查看已删除用户
 const bcrypt = require('bcryptjs');
 const db = require('../config/db');
 
 /**
  * 获取用户列表
- * GET /api/users
+ * GET /api/users?showDeleted=false|true|only|all
  */
 const getUsers = async (req, res) => {
   try {
-    const { page = 1, pageSize = 20, keyword = '', roleId = '' } = req.query;
+    const { page = 1, pageSize = 20, keyword = '', roleId = '', showDeleted = 'false' } = req.query;
     const offset = (page - 1) * pageSize;
 
-    // ✅ 修复：添加 is_deleted 过滤条件
-    let whereClause = 'WHERE (u.is_deleted = 0 OR u.is_deleted IS NULL)';
+    // ✅ 根据参数决定是否显示已删除用户
+    let whereClause = '';
+    
+    if (showDeleted === 'only') {
+      // 只显示已删除
+      whereClause = 'WHERE u.is_deleted = 1';
+    } else if (showDeleted === 'true' || showDeleted === 'all') {
+      // 显示全部（包括已删除）
+      whereClause = 'WHERE 1=1';
+    } else {
+      // 默认：只显示未删除
+      whereClause = 'WHERE (u.is_deleted = 0 OR u.is_deleted IS NULL)';
+    }
+    
     const params = [];
 
     if (keyword) {
@@ -87,7 +99,6 @@ const createUser = async (req, res) => {
   try {
     const { username, password, realName, email, phone, roleId } = req.body;
 
-    // 验证必填字段
     if (!username || !password || !roleId) {
       return res.status(400).json({
         success: false,
@@ -95,7 +106,6 @@ const createUser = async (req, res) => {
       });
     }
 
-    // 检查用户名是否已存在（包括已删除的）
     const [existing] = await db.query('SELECT id FROM users WHERE username = ?', [username]);
     if (existing.length > 0) {
       return res.status(400).json({
@@ -104,10 +114,8 @@ const createUser = async (req, res) => {
       });
     }
 
-    // 加密密码
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // ✅ 创建用户时设置 is_deleted = 0
     const [result] = await db.query(`
       INSERT INTO users (username, password_hash, real_name, email, phone, role_id, is_deleted)
       VALUES (?, ?, ?, ?, ?, ?, 0)
@@ -137,7 +145,6 @@ const updateUser = async (req, res) => {
     const { id } = req.params;
     const { realName, email, phone, roleId, isActive, is_active, isDeleted, is_deleted } = req.body;
 
-    // 检查用户是否存在
     const [existing] = await db.query('SELECT id FROM users WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
@@ -146,11 +153,9 @@ const updateUser = async (req, res) => {
       });
     }
 
-    // ✅ 修复：支持更新 is_deleted 字段（用于软删除）
     const finalIsActive = isActive !== undefined ? isActive : is_active;
     const finalIsDeleted = isDeleted !== undefined ? isDeleted : is_deleted;
 
-    // 构建更新语句
     const updates = [];
     const values = [];
 
@@ -226,7 +231,6 @@ const resetPassword = async (req, res) => {
       });
     }
 
-    // 检查用户是否存在
     const [existing] = await db.query('SELECT id FROM users WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
@@ -235,10 +239,8 @@ const resetPassword = async (req, res) => {
       });
     }
 
-    // 加密新密码
     const passwordHash = await bcrypt.hash(newPassword, 10);
 
-    // 更新密码
     await db.query('UPDATE users SET password_hash = ? WHERE id = ?', [passwordHash, id]);
 
     res.json({
@@ -265,7 +267,6 @@ const deleteUser = async (req, res) => {
 
     console.log('🗑️ 删除用户请求 ID:', id);
 
-    // 不允许删除自己
     if (parseInt(id) === req.user.id) {
       return res.status(400).json({
         success: false,
@@ -273,7 +274,6 @@ const deleteUser = async (req, res) => {
       });
     }
 
-    // 检查用户是否存在
     const [existing] = await db.query(
       'SELECT id, username FROM users WHERE id = ? AND (is_deleted = 0 OR is_deleted IS NULL)', 
       [id]
@@ -312,7 +312,6 @@ const deleteUser = async (req, res) => {
   } catch (error) {
     console.error('❌ 删除用户错误:', error);
     
-    // 处理外键约束错误
     if (error.code === 'ER_ROW_IS_REFERENCED_2') {
       return res.status(400).json({
         success: false,
@@ -320,6 +319,52 @@ const deleteUser = async (req, res) => {
       });
     }
     
+    res.status(500).json({
+      success: false,
+      message: '服务器内部错误: ' + error.message
+    });
+  }
+};
+
+/**
+ * ✨ 新增：恢复已删除用户
+ * POST /api/users/:id/restore
+ */
+const restoreUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log('♻️ 恢复用户请求 ID:', id);
+
+    // 检查用户是否存在且已删除
+    const [existing] = await db.query(
+      'SELECT id, username FROM users WHERE id = ? AND is_deleted = 1', 
+      [id]
+    );
+    
+    if (existing.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: '用户不存在或未被删除'
+      });
+    }
+
+    // 恢复用户：is_deleted = 0, is_active = 1
+    const [result] = await db.query(`
+      UPDATE users 
+      SET is_deleted = 0, is_active = 1
+      WHERE id = ?
+    `, [id]);
+
+    console.log(`✅ 用户 ${existing[0].username} 已恢复`);
+
+    res.json({
+      success: true,
+      message: '用户恢复成功'
+    });
+
+  } catch (error) {
+    console.error('❌ 恢复用户错误:', error);
     res.status(500).json({
       success: false,
       message: '服务器内部错误: ' + error.message
@@ -341,7 +386,7 @@ const getRoles = async (req, res) => {
         id: r.id,
         code: r.role_code,
         name: r.role_name,
-        roleName: r.role_name,  // ✅ 兼容前端
+        roleName: r.role_name,
         description: r.description
       }))
     });
@@ -361,5 +406,6 @@ module.exports = {
   updateUser,
   resetPassword,
   deleteUser,
+  restoreUser,  // ✨ 新增
   getRoles
 };
