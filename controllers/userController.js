@@ -1,4 +1,4 @@
-// backend/controllers/userController.js
+// backend/controllers/userController.js - 修复版
 const bcrypt = require('bcryptjs');
 const db = require('../config/db');
 
@@ -11,8 +11,8 @@ const getUsers = async (req, res) => {
     const { page = 1, pageSize = 20, keyword = '', roleId = '' } = req.query;
     const offset = (page - 1) * pageSize;
 
-    // 构建查询条件
-    let whereClause = 'WHERE 1=1';
+    // ✅ 修复：添加 is_deleted 过滤条件
+    let whereClause = 'WHERE (u.is_deleted = 0 OR u.is_deleted IS NULL)';
     const params = [];
 
     if (keyword) {
@@ -35,7 +35,7 @@ const getUsers = async (req, res) => {
     // 查询用户列表
     const [users] = await db.query(`
       SELECT u.id, u.username, u.real_name, u.email, u.phone, 
-             u.is_active, u.last_login, u.created_at,
+             u.is_active, u.is_deleted, u.last_login, u.created_at,
              r.id as role_id, r.role_code, r.role_name
       FROM users u 
       JOIN roles r ON u.role_id = r.id 
@@ -54,6 +54,7 @@ const getUsers = async (req, res) => {
           email: u.email,
           phone: u.phone,
           isActive: u.is_active,
+          isDeleted: u.is_deleted,  // ✅ 返回删除状态
           lastLogin: u.last_login,
           createdAt: u.created_at,
           roleId: u.role_id,
@@ -94,7 +95,7 @@ const createUser = async (req, res) => {
       });
     }
 
-    // 检查用户名是否已存在
+    // 检查用户名是否已存在（包括已删除的）
     const [existing] = await db.query('SELECT id FROM users WHERE username = ?', [username]);
     if (existing.length > 0) {
       return res.status(400).json({
@@ -106,10 +107,10 @@ const createUser = async (req, res) => {
     // 加密密码
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // 创建用户
+    // ✅ 创建用户时设置 is_deleted = 0
     const [result] = await db.query(`
-      INSERT INTO users (username, password_hash, real_name, email, phone, role_id)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO users (username, password_hash, real_name, email, phone, role_id, is_deleted)
+      VALUES (?, ?, ?, ?, ?, ?, 0)
     `, [username, passwordHash, realName, email, phone, roleId]);
 
     res.status(201).json({
@@ -134,7 +135,7 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { realName, email, phone, roleId, isActive } = req.body;
+    const { realName, email, phone, roleId, isActive, is_active, isDeleted, is_deleted } = req.body;
 
     // 检查用户是否存在
     const [existing] = await db.query('SELECT id FROM users WHERE id = ?', [id]);
@@ -145,12 +146,55 @@ const updateUser = async (req, res) => {
       });
     }
 
-    // 更新用户
+    // ✅ 修复：支持更新 is_deleted 字段（用于软删除）
+    const finalIsActive = isActive !== undefined ? isActive : is_active;
+    const finalIsDeleted = isDeleted !== undefined ? isDeleted : is_deleted;
+
+    // 构建更新语句
+    const updates = [];
+    const values = [];
+
+    if (realName !== undefined) {
+      updates.push('real_name = ?');
+      values.push(realName);
+    }
+    if (email !== undefined) {
+      updates.push('email = ?');
+      values.push(email);
+    }
+    if (phone !== undefined) {
+      updates.push('phone = ?');
+      values.push(phone);
+    }
+    if (roleId !== undefined) {
+      updates.push('role_id = ?');
+      values.push(roleId);
+    }
+    if (finalIsActive !== undefined) {
+      updates.push('is_active = ?');
+      values.push(finalIsActive ? 1 : 0);
+    }
+    
+    // ✅ 支持软删除标记
+    if (finalIsDeleted !== undefined) {
+      updates.push('is_deleted = ?');
+      values.push(finalIsDeleted ? 1 : 0);
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: '没有要更新的字段'
+      });
+    }
+
+    values.push(id);
+
     await db.query(`
       UPDATE users 
-      SET real_name = ?, email = ?, phone = ?, role_id = ?, is_active = ?
+      SET ${updates.join(', ')}
       WHERE id = ?
-    `, [realName, email, phone, roleId, isActive, id]);
+    `, values);
 
     res.json({
       success: true,
@@ -212,12 +256,14 @@ const resetPassword = async (req, res) => {
 };
 
 /**
- * 删除用户
+ * 删除用户（软删除）
  * DELETE /api/users/:id
  */
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
+
+    console.log('🗑️ 删除用户请求 ID:', id);
 
     // 不允许删除自己
     if (parseInt(id) === req.user.id) {
@@ -228,27 +274,55 @@ const deleteUser = async (req, res) => {
     }
 
     // 检查用户是否存在
-    const [existing] = await db.query('SELECT id FROM users WHERE id = ?', [id]);
+    const [existing] = await db.query(
+      'SELECT id, username FROM users WHERE id = ? AND (is_deleted = 0 OR is_deleted IS NULL)', 
+      [id]
+    );
+    
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
-        message: '用户不存在'
+        message: '用户不存在或已被删除'
       });
     }
 
-    // 软删除：禁用账号
-    await db.query('UPDATE users SET is_active = FALSE WHERE id = ?', [id]);
+    // ✅ 软删除：标记为已删除
+    const [result] = await db.query(`
+      UPDATE users 
+      SET is_deleted = 1, is_active = 0
+      WHERE id = ?
+    `, [id]);
+
+    console.log('📊 软删除结果:', result);
+
+    if (result.affectedRows === 0) {
+      return res.status(500).json({
+        success: false,
+        message: '删除失败'
+      });
+    }
+
+    console.log(`✅ 用户 ${existing[0].username} 已软删除`);
 
     res.json({
       success: true,
-      message: '用户已禁用'
+      message: '用户删除成功'
     });
 
   } catch (error) {
-    console.error('删除用户错误:', error);
+    console.error('❌ 删除用户错误:', error);
+    
+    // 处理外键约束错误
+    if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+      return res.status(400).json({
+        success: false,
+        message: '无法删除：该用户有关联数据'
+      });
+    }
+    
     res.status(500).json({
       success: false,
-      message: '服务器内部错误'
+      message: '服务器内部错误: ' + error.message
     });
   }
 };
@@ -267,6 +341,7 @@ const getRoles = async (req, res) => {
         id: r.id,
         code: r.role_code,
         name: r.role_name,
+        roleName: r.role_name,  // ✅ 兼容前端
         description: r.description
       }))
     });
