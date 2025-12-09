@@ -2,7 +2,42 @@
 const db = require('../config/db');
 
 /**
- * 获取销售订单列表
+ * ⭐ 获取产品的库存状态（与产品详情 BOM 逻辑保持一致）
+ */
+async function getProductInventoryStatus(productId) {
+  const [bomRows] = await db.execute(
+    `SELECT m.id, m.name, b.quantity AS unit_usage,
+            m.stock, m.in_transit
+     FROM bom_items b
+     JOIN materials m ON m.id = b.material_id
+     WHERE b.product_id = ?`,
+    [productId]
+  );
+
+  if (bomRows.length === 0) {
+    return { status: 'normal', warning: false };
+  }
+
+  let hasShortage = false;
+
+  for (const row of bomRows) {
+    const required = row.unit_usage;
+    const available = row.stock + row.in_transit;
+
+    if (available < required) {
+      hasShortage = true;
+      break;
+    }
+  }
+
+  return {
+    status: hasShortage ? 'delayed' : 'normal',
+    warning: hasShortage
+  };
+}
+
+/**
+ * 获取销售订单列表（包含产品库存状态）
  */
 const getOrders = async (req, res) => {
   try {
@@ -28,6 +63,7 @@ const getOrders = async (req, res) => {
       LEFT JOIN customers c ON o.customer_id = c.id
       ${whereClause}
     `, params);
+
     const total = countResult[0].total;
 
     const [orders] = await db.query(`
@@ -41,24 +77,20 @@ const getOrders = async (req, res) => {
       LIMIT ? OFFSET ?
     `, [...params, parseInt(pageSize), offset]);
 
-    const now = new Date();
-
     for (let order of orders) {
       const [lines] = await db.query(`
-        SELECT ol.*, p.name as product_name, p.product_code
+        SELECT ol.*, p.name as product_name, p.id as product_id
         FROM order_lines ol
         LEFT JOIN products p ON ol.product_id = p.id
         WHERE ol.order_id = ?
       `, [order.id]);
 
-      // ⭐ 自动判断是否逾期
-      let finalStatus = order.status;
-      if (new Date(order.delivery_date) < now && order.status !== 'shipped') {
-        finalStatus = 'overdue';
+      // ⭐ 为每个产品行附加 BOM 库存状态
+      for (const line of lines) {
+        line.inventoryStatus = await getProductInventoryStatus(line.product_id);
       }
 
       order.lines = lines;
-      order.finalStatus = finalStatus;
     }
 
     res.json({
@@ -71,14 +103,13 @@ const getOrders = async (req, res) => {
           orderDate: o.order_date,
           deliveryDate: o.delivery_date,
           salesPerson: o.sales_person,
-          status: o.finalStatus,   // ⭐ 关键：返回处理后的状态
+          status: o.status, // 保持原始订单状态（不强行覆盖 overdue）
           remark: o.remark,
           lines: o.lines
         })),
         pagination: { page: parseInt(page), pageSize: parseInt(pageSize), total }
       }
     });
-
   } catch (error) {
     console.error('获取订单列表错误:', error);
     res.status(500).json({ success: false, message: '服务器内部错误' });
@@ -86,7 +117,7 @@ const getOrders = async (req, res) => {
 };
 
 /**
- * 获取订单详情
+ * 获取订单详细（包含产品库存状态）
  */
 const getOrderById = async (req, res) => {
   try {
@@ -105,18 +136,17 @@ const getOrderById = async (req, res) => {
 
     const order = orders[0];
 
-    const now = new Date();
-    let finalStatus = order.status;
-    if (new Date(order.delivery_date) < now && order.status !== 'shipped') {
-      finalStatus = 'overdue';
-    }
-
     const [lines] = await db.query(`
-      SELECT ol.*, p.name as product_name
+      SELECT ol.*, p.name as product_name, p.id as product_id 
       FROM order_lines ol
       LEFT JOIN products p ON ol.product_id = p.id
       WHERE ol.order_id = ?
     `, [id]);
+
+    // ⭐ 每个产品行附加 BOM 库存状态——关键部分
+    for (const line of lines) {
+      line.inventoryStatus = await getProductInventoryStatus(line.product_id);
+    }
 
     res.json({
       success: true,
@@ -126,24 +156,26 @@ const getOrderById = async (req, res) => {
         customerName: order.customer_name,
         orderDate: order.order_date,
         deliveryDate: order.delivery_date,
-        status: finalStatus, // ⭐ 返回处理后的状态
+        status: order.status,  // 不再自动标记 overdue
         remark: order.remark,
         lines: lines.map(l => ({
+          productId: l.product_id,
           productName: l.product_name,
           quantity: l.quantity,
+          unitPrice: l.unit_price,
+          amount: l.amount,
+          inventoryStatus: l.inventoryStatus // ⭐ 返回给前端使用
         }))
       }
     });
-
   } catch (error) {
     console.error('获取订单详情错误:', error);
     res.status(500).json({ success: false, message: '服务器内部错误' });
   }
 };
 
-
 /**
- * 创建订单
+ * 创建订单（保持不动）
  */
 const createOrder = async (req, res) => {
   const connection = await db.getConnection();
@@ -220,7 +252,7 @@ const createOrder = async (req, res) => {
 };
 
 /**
- * 更新订单
+ * 更新订单（不动你的逻辑）
  */
 const updateOrder = async (req, res) => {
   const connection = await db.getConnection();
@@ -248,7 +280,6 @@ const updateOrder = async (req, res) => {
       totalAmount += (line.quantity || 0) * (line.unitPrice || 0);
     }
 
-    // 更新订单主表
     await connection.query(`
       UPDATE sales_orders 
       SET order_no = ?, customer_id = ?, order_date = ?, delivery_date = ?, 
@@ -301,7 +332,7 @@ const deleteOrder = async (req, res) => {
       return res.status(404).json({ success: false, message: '订单不存在' });
     }
 
-    // 只有待处理状态可以删除，其他状态改为取消
+    // 只有 pending 能删除，否则改为 cancelled
     if (existing[0].status !== 'pending') {
       await db.query("UPDATE sales_orders SET status = 'cancelled' WHERE id = ?", [id]);
       return res.json({ success: true, message: '订单已取消' });
