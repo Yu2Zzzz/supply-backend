@@ -23,7 +23,7 @@ const getPurchaseOrders = async (req, res) => {
     let whereClause = 'WHERE 1=1';
     const params = [];
 
-    // 关键词可搜索：采购单号、材料名称、供应商名称、销售订单号
+    // 关键词：采购单号 / 物料名 / 供应商名 / 销售订单号
     if (keyword) {
       whereClause += `
         AND (
@@ -92,7 +92,7 @@ const getPurchaseOrders = async (req, res) => {
       ${whereClause}
       ORDER BY po.expected_date ASC, po.created_at DESC
       LIMIT ? OFFSET ?
-    `, [...params, parseInt(pageSize), offset]);
+    `, [...params, parseInt(pageSize, 10), offset]);
 
     // ---------- 格式化返回 ----------
     return res.json({
@@ -116,14 +116,15 @@ const getPurchaseOrders = async (req, res) => {
           actualDate: o.actual_date,
           status: o.status,
           remark: o.remark,
-          salesOrderId: o.sales_order_id,              // ⭐ 新增
-          salesOrderNo: o.sales_order_no,              // ⭐ 新增
-          customerName: o.customer_name,               // ⭐ 新增
+          // 关联销售订单信息
+          salesOrderId: o.sales_order_id,
+          salesOrderNo: o.sales_order_no,
+          customerName: o.customer_name,
           createdAt: o.created_at
         })),
         pagination: {
-          page: parseInt(page),
-          pageSize: parseInt(pageSize),
+          page: parseInt(page, 10),
+          pageSize: parseInt(pageSize, 10),
           total,
           totalPages: Math.ceil(total / pageSize)
         }
@@ -148,12 +149,23 @@ const getPurchaseOrderById = async (req, res) => {
     const { id } = req.params;
 
     const [orders] = await db.query(`
-      SELECT po.*, 
-             m.material_code, m.name as material_name, m.spec, m.unit,
-             s.supplier_code, s.name as supplier_name, s.contact_person, s.phone
+      SELECT 
+        po.*, 
+        m.material_code, 
+        m.name AS material_name, 
+        m.spec, 
+        m.unit,
+        s.supplier_code, 
+        s.name AS supplier_name, 
+        s.contact_person, 
+        s.phone,
+        so.order_no AS sales_order_no,
+        c.name AS customer_name
       FROM purchase_orders po
       JOIN materials m ON po.material_id = m.id
       JOIN suppliers s ON po.supplier_id = s.id
+      LEFT JOIN sales_orders so ON po.sales_order_id = so.id
+      LEFT JOIN customers c ON so.customer_id = c.id
       WHERE po.id = ?
     `, [id]);
 
@@ -189,6 +201,9 @@ const getPurchaseOrderById = async (req, res) => {
         actualDate: order.actual_date,
         status: order.status,
         remark: order.remark,
+        salesOrderId: order.sales_order_id,
+        salesOrderNo: order.sales_order_no,
+        customerName: order.customer_name,
         createdAt: order.created_at
       }
     });
@@ -210,24 +225,18 @@ const createPurchaseOrder = async (req, res) => {
   const connection = await db.getConnection();
   
   try {
-    const { materialId, supplierId, salesOrderId, quantity, unitPrice, orderDate, expectedDate, status, remark } = req.body;
-
-    // 自动生成采购单号（如果没有提供）
-    let finalPoNo = poNo;
-    if (!finalPoNo) {
-      const today = new Date();
-      const prefix = `PO${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}`;
-      const [result] = await connection.query(
-        "SELECT MAX(po_no) as maxNo FROM purchase_orders WHERE po_no LIKE ?",
-        [`${prefix}%`]
-      );
-      let seq = 1;
-      if (result[0].maxNo) {
-        const lastSeq = parseInt(result[0].maxNo.slice(-4));
-        seq = lastSeq + 1;
-      }
-      finalPoNo = `${prefix}${String(seq).padStart(4, '0')}`;
-    }
+    const { 
+      poNo,                 // 可选：手动传采购单号
+      materialId, 
+      supplierId, 
+      salesOrderId,         // ⭐ 关联销售订单
+      quantity, 
+      unitPrice, 
+      orderDate, 
+      expectedDate, 
+      status, 
+      remark 
+    } = req.body;
 
     // 验证必填字段
     if (!materialId || !supplierId || !quantity || !orderDate || !expectedDate) {
@@ -237,38 +246,62 @@ const createPurchaseOrder = async (req, res) => {
       });
     }
 
-    const totalAmount = unitPrice ? quantity * unitPrice : null;
+    const finalQuantity  = parseInt(quantity, 10) || 0;
+    const finalUnitPrice = parseFloat(unitPrice) || 0;
+    const totalAmount    = finalQuantity * finalUnitPrice || null;
+
+    // 自动生成采购单号（如果没有提供）
+    let finalPoNo = poNo;
+    if (!finalPoNo) {
+      const today = new Date();
+      const prefix = `PO${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}`;
+      const [result] = await connection.query(
+        'SELECT MAX(po_no) AS maxNo FROM purchase_orders WHERE po_no LIKE ?',
+        [`${prefix}%`]
+      );
+      let seq = 1;
+      if (result[0].maxNo) {
+        const lastSeq = parseInt(result[0].maxNo.slice(-4), 10);
+        seq = lastSeq + 1;
+      }
+      finalPoNo = `${prefix}${String(seq).padStart(4, '0')}`;
+    }
 
     await connection.beginTransaction();
 
-    // 创建采购订单
-    const [result] = await connection.query(`
-  INSERT INTO purchase_orders
-    (po_no, material_id, supplier_id, sales_order_id, quantity, unit_price, total_amount, order_date, expected_date, status, remark)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-`,
-[
-  finalPoNo,               // po_no
-  materialId,              // material_id
-  supplierId,              // supplier_id
-  salesOrderId || null,    // sales_order_id ⭐ 你要新增的字段
-  quantity,                // quantity
-  unitPrice || 0,          // unit_price
-  totalAmount,             // total_amount
-  orderDate,               // order_date
-  expectedDate,            // expected_date
-  status || 'draft',       // status
-  remark || ''             // remark
-]);
+    // 创建采购订单（包含 sales_order_id）
+    const [result] = await connection.query(
+      `
+      INSERT INTO purchase_orders
+        (po_no, material_id, supplier_id, sales_order_id, quantity, unit_price, total_amount, order_date, expected_date, status, remark)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `,
+      [
+        finalPoNo,               // po_no
+        materialId,              // material_id
+        supplierId,              // supplier_id
+        salesOrderId || null,    // sales_order_id
+        finalQuantity,           // quantity
+        finalUnitPrice,          // unit_price
+        totalAmount,             // total_amount
+        orderDate,               // order_date
+        expectedDate,            // expected_date
+        status || 'draft',       // status
+        remark || ''             // remark
+      ]
+    );
 
     const poId = result.insertId;
 
-    // 创建在途记录（可选，如果表存在）
+    // 创建在途记录（如果表存在就写入，失败不报错）
     try {
-      await connection.query(`
+      await connection.query(
+        `
         INSERT INTO in_transit (purchase_order_id, material_id, quantity, expected_date)
         VALUES (?, ?, ?, ?)
-      `, [poId, materialId, quantity, expectedDate]);
+        `,
+        [poId, materialId, finalQuantity, expectedDate]
+      );
     } catch (e) {
       console.log('in_transit表可能不存在，跳过:', e.message);
     }
@@ -314,6 +347,7 @@ const updatePurchaseOrder = async (req, res) => {
       poNo, 
       materialId, 
       supplierId, 
+      salesOrderId,         // ⭐ 新增：关联销售订单
       quantity, 
       unitPrice, 
       orderDate, 
@@ -323,10 +357,13 @@ const updatePurchaseOrder = async (req, res) => {
       remark 
     } = req.body;
 
-    console.log('更新采购订单请求:', { id, poNo, materialId, supplierId, quantity, status });
+    console.log('更新采购订单请求:', { id, poNo, materialId, supplierId, salesOrderId, quantity, status });
 
     // 检查订单是否存在
-    const [existing] = await connection.query('SELECT id, status, material_id, po_no FROM purchase_orders WHERE id = ?', [id]);
+    const [existing] = await connection.query(
+      'SELECT id, status, material_id, po_no FROM purchase_orders WHERE id = ?',
+      [id]
+    );
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -334,22 +371,53 @@ const updatePurchaseOrder = async (req, res) => {
       });
     }
 
-    const oldOrder = existing[0];
+    const oldOrder  = existing[0];
     const oldStatus = oldOrder.status;
-    const finalPoNo = poNo || oldOrder.po_no;  // 如果没传poNo，使用原来的
-    const totalAmount = unitPrice ? quantity * unitPrice : null;
+    const finalPoNo = poNo || oldOrder.po_no;
+
+    const finalQuantity  = parseInt(quantity, 10) || 0;
+    const finalUnitPrice = parseFloat(unitPrice) || 0;
+    const totalAmount    = finalQuantity * finalUnitPrice || null;
 
     await connection.beginTransaction();
 
-    // 更新采购订单
-    await connection.query(`
+    // 更新采购订单（包含 sales_order_id）
+    await connection.query(
+      `
       UPDATE purchase_orders 
-      SET po_no = ?, material_id = ?, supplier_id = ?, quantity = ?, unit_price = ?, 
-          total_amount = ?, order_date = ?, expected_date = ?, actual_date = ?, status = ?, remark = ?
+      SET 
+        po_no         = ?, 
+        material_id   = ?, 
+        supplier_id   = ?, 
+        sales_order_id = ?, 
+        quantity      = ?, 
+        unit_price    = ?, 
+        total_amount  = ?, 
+        order_date    = ?, 
+        expected_date = ?, 
+        actual_date   = ?, 
+        status        = ?, 
+        remark        = ?
       WHERE id = ?
-    `, [finalPoNo, materialId, supplierId, quantity, unitPrice || 0, totalAmount, orderDate, expectedDate, actualDate || null, status, remark || '', id]);
+      `,
+      [
+        finalPoNo,
+        materialId,
+        supplierId,
+        salesOrderId || null,    // ⭐ 关键
+        finalQuantity,
+        finalUnitPrice,
+        totalAmount,
+        orderDate,
+        expectedDate,
+        actualDate || null,
+        status,
+        remark || '',
+        id
+      ]
+    );
 
-    // 处理状态变更
+    // ---------------- 状态变更逻辑保持不变 ----------------
     if (status === 'arrived' && oldStatus !== 'arrived') {
       // 到货后删除在途记录
       try {
@@ -368,18 +436,17 @@ const updatePurchaseOrder = async (req, res) => {
         if (invExisting.length > 0) {
           await connection.query(
             'UPDATE inventory SET quantity = quantity + ? WHERE id = ?',
-            [quantity, invExisting[0].id]
+            [finalQuantity, invExisting[0].id]
           );
         } else {
           await connection.query(
             'INSERT INTO inventory (material_id, warehouse_id, quantity) VALUES (?, 1, ?)',
-            [materialId, quantity]
+            [materialId, finalQuantity]
           );
         }
         console.log('库存更新成功');
       } catch (e) {
         console.log('库存更新失败，可能表不存在或结构不同:', e.message);
-        // 不抛出错误，继续执行
       }
     } else if (status !== 'cancelled' && status !== 'arrived') {
       // 更新在途数量
@@ -390,7 +457,7 @@ const updatePurchaseOrder = async (req, res) => {
         if (transitExisting.length > 0) {
           await connection.query(
             'UPDATE in_transit SET quantity = ?, expected_date = ?, material_id = ? WHERE purchase_order_id = ?',
-            [quantity, expectedDate, materialId, id]
+            [finalQuantity, expectedDate, materialId, id]
           );
         }
       } catch (e) {
@@ -443,7 +510,10 @@ const deletePurchaseOrder = async (req, res) => {
     const { id } = req.params;
 
     // 检查订单是否存在
-    const [existing] = await connection.query('SELECT id, status FROM purchase_orders WHERE id = ?', [id]);
+    const [existing] = await connection.query(
+      'SELECT id, status FROM purchase_orders WHERE id = ?',
+      [id]
+    );
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -453,7 +523,10 @@ const deletePurchaseOrder = async (req, res) => {
 
     // 只有草稿状态可以删除，其他状态改为取消
     if (existing[0].status !== 'draft') {
-      await db.query("UPDATE purchase_orders SET status = 'cancelled' WHERE id = ?", [id]);
+      await db.query(
+        "UPDATE purchase_orders SET status = 'cancelled' WHERE id = ?",
+        [id]
+      );
       try {
         await db.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
       } catch (e) {
@@ -505,7 +578,10 @@ const confirmPurchaseOrder = async (req, res) => {
     const { id } = req.params;
     const { status: newStatus } = req.body;
 
-    const [existing] = await db.query('SELECT * FROM purchase_orders WHERE id = ?', [id]);
+    const [existing] = await db.query(
+      'SELECT * FROM purchase_orders WHERE id = ?',
+      [id]
+    );
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -515,12 +591,11 @@ const confirmPurchaseOrder = async (req, res) => {
 
     const order = existing[0];
     
-    // 状态流转规则
     const statusFlow = {
-      'draft': ['confirmed'],
-      'confirmed': ['producing'],
-      'producing': ['shipped'],
-      'shipped': ['arrived']
+      draft:     ['confirmed'],
+      confirmed: ['producing'],
+      producing: ['shipped'],
+      shipped:   ['arrived']
     };
 
     const allowedNextStatus = statusFlow[order.status] || [];
@@ -532,7 +607,6 @@ const confirmPurchaseOrder = async (req, res) => {
       });
     }
 
-    // 默认下一个状态
     const targetStatus = newStatus || allowedNextStatus[0];
     
     if (!targetStatus) {
@@ -542,12 +616,17 @@ const confirmPurchaseOrder = async (req, res) => {
       });
     }
 
-    await db.query("UPDATE purchase_orders SET status = ? WHERE id = ?", [targetStatus, id]);
+    await db.query(
+      'UPDATE purchase_orders SET status = ? WHERE id = ?',
+      [targetStatus, id]
+    );
 
-    // 如果到货，处理库存
     if (targetStatus === 'arrived') {
       try {
-        await db.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+        await db.query(
+          'DELETE FROM in_transit WHERE purchase_order_id = ?',
+          [id]
+        );
         
         const [invExisting] = await db.query(
           'SELECT id, quantity FROM inventory WHERE material_id = ? AND warehouse_id = 1',
@@ -594,13 +673,13 @@ const generatePoNo = async (req, res) => {
     const prefix = `PO${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}`;
     
     const [result] = await db.query(
-      "SELECT MAX(po_no) as maxNo FROM purchase_orders WHERE po_no LIKE ?",
+      'SELECT MAX(po_no) AS maxNo FROM purchase_orders WHERE po_no LIKE ?',
       [`${prefix}%`]
     );
 
     let seq = 1;
     if (result[0].maxNo) {
-      const lastSeq = parseInt(result[0].maxNo.slice(-4));
+      const lastSeq = parseInt(result[0].maxNo.slice(-4), 10);
       seq = lastSeq + 1;
     }
 
