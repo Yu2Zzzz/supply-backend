@@ -708,8 +708,3 @@ module.exports = {
   confirmPurchaseOrder,
   generatePoNo
 };
-
-await db.query(
-  "UPDATE materials SET in_transit = in_transit + ? WHERE id = ?",
-  [quantity, materialId]
-);
