@@ -295,7 +295,12 @@ router.get('/data', async (req, res) => {
       const [mats] = await db.query(`
         SELECT m.*, 
                COALESCE((SELECT SUM(i.quantity) FROM inventory i WHERE i.material_id = m.id), 0) as inv,
-               COALESCE((SELECT SUM(it.quantity) FROM in_transit it WHERE it.material_id = m.id), 0) as transit,
+              COALESCE((
+             SELECT SUM(po.quantity)
+             FROM purchase_orders po
+             WHERE po.material_id = m.id
+               AND po.status NOT IN ('cancelled', 'arrived')
+           ), 0) AS transit,
                (SELECT COUNT(*) FROM material_suppliers ms WHERE ms.material_id = m.id) as suppliers
         FROM materials m
         WHERE m.status = 'active'

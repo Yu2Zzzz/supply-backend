@@ -44,7 +44,12 @@ const getMaterials = async (req, res) => {
     const [materials] = await db.query(`
       SELECT m.*,
              COALESCE((SELECT SUM(i.quantity) FROM inventory i WHERE i.material_id = m.id), 0) as current_stock,
-             COALESCE((SELECT SUM(it.quantity) FROM in_transit it WHERE it.material_id = m.id), 0) as in_transit_qty,
+            COALESCE((
+           SELECT SUM(po.quantity)
+           FROM purchase_orders po
+           WHERE po.material_id = m.id
+             AND po.status NOT IN ('cancelled', 'arrived')
+         ), 0) AS in_transit_qty,
              (SELECT COUNT(*) FROM material_suppliers ms WHERE ms.material_id = m.id) as supplier_count
       FROM materials m
       ${whereClause}
@@ -123,14 +128,21 @@ const getMaterialById = async (req, res) => {
       WHERE i.material_id = ?
     `, [id]);
 
-    // 获取在途信息
+    // 获取在途信息：直接从 purchase_orders 汇总
     const [inTransit] = await db.query(`
-      SELECT it.*, po.po_no, po.status as po_status, s.name as supplier_name
-      FROM in_transit it
-      JOIN purchase_orders po ON it.purchase_order_id = po.id
-      JOIN suppliers s ON po.supplier_id = s.id
-      WHERE it.material_id = ?
-    `, [id]);
+  SELECT 
+    po.id,
+    po.po_no,
+    po.status AS po_status,
+    po.quantity,
+    po.expected_date,
+    s.name AS supplier_name
+  FROM purchase_orders po
+  JOIN suppliers s ON po.supplier_id = s.id
+  WHERE po.material_id = ?
+    AND po.status NOT IN ('cancelled', 'arrived')
+  ORDER BY po.expected_date ASC
+`, [id]);
 
     const material = materials[0];
 
