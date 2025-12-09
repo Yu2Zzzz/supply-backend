@@ -31,7 +31,9 @@ const getOrders = async (req, res) => {
     const total = countResult[0].total;
 
     const [orders] = await db.query(`
-      SELECT o.*, c.name as customer_name, c.customer_code
+      SELECT o.*, 
+             c.name as customer_name, 
+             c.customer_code
       FROM sales_orders o
       LEFT JOIN customers c ON o.customer_id = c.id
       ${whereClause}
@@ -39,7 +41,8 @@ const getOrders = async (req, res) => {
       LIMIT ? OFFSET ?
     `, [...params, parseInt(pageSize), offset]);
 
-    // 获取订单明细
+    const now = new Date();
+
     for (let order of orders) {
       const [lines] = await db.query(`
         SELECT ol.*, p.name as product_name, p.product_code
@@ -47,15 +50,15 @@ const getOrders = async (req, res) => {
         LEFT JOIN products p ON ol.product_id = p.id
         WHERE ol.order_id = ?
       `, [order.id]);
-      order.lines = lines.map(l => ({
-        id: l.id,
-        productId: l.product_id,
-        productCode: l.product_code,
-        productName: l.product_name,
-        quantity: l.quantity,
-        unitPrice: l.unit_price,
-        amount: l.amount
-      }));
+
+      // ⭐ 自动判断是否逾期
+      let finalStatus = order.status;
+      if (new Date(order.delivery_date) < now && order.status !== 'shipped') {
+        finalStatus = 'overdue';
+      }
+
+      order.lines = lines;
+      order.finalStatus = finalStatus;
     }
 
     res.json({
@@ -64,21 +67,18 @@ const getOrders = async (req, res) => {
         list: orders.map(o => ({
           id: o.id,
           orderNo: o.order_no,
-          customerId: o.customer_id,
           customerName: o.customer_name,
-          customerCode: o.customer_code,
           orderDate: o.order_date,
           deliveryDate: o.delivery_date,
           salesPerson: o.sales_person,
-          status: o.status,
-          totalAmount: o.total_amount,
+          status: o.finalStatus,   // ⭐ 关键：返回处理后的状态
           remark: o.remark,
-          lines: o.lines,
-          createdAt: o.created_at
+          lines: o.lines
         })),
-        pagination: { page: parseInt(page), pageSize: parseInt(pageSize), total, totalPages: Math.ceil(total / pageSize) }
+        pagination: { page: parseInt(page), pageSize: parseInt(pageSize), total }
       }
     });
+
   } catch (error) {
     console.error('获取订单列表错误:', error);
     res.status(500).json({ success: false, message: '服务器内部错误' });
@@ -93,7 +93,7 @@ const getOrderById = async (req, res) => {
     const { id } = req.params;
 
     const [orders] = await db.query(`
-      SELECT o.*, c.name as customer_name, c.customer_code
+      SELECT o.*, c.name as customer_name
       FROM sales_orders o
       LEFT JOIN customers c ON o.customer_id = c.id
       WHERE o.id = ?
@@ -105,8 +105,14 @@ const getOrderById = async (req, res) => {
 
     const order = orders[0];
 
+    const now = new Date();
+    let finalStatus = order.status;
+    if (new Date(order.delivery_date) < now && order.status !== 'shipped') {
+      finalStatus = 'overdue';
+    }
+
     const [lines] = await db.query(`
-      SELECT ol.*, p.name as product_name, p.product_code
+      SELECT ol.*, p.name as product_name
       FROM order_lines ol
       LEFT JOIN products p ON ol.product_id = p.id
       WHERE ol.order_id = ?
@@ -117,29 +123,24 @@ const getOrderById = async (req, res) => {
       data: {
         id: order.id,
         orderNo: order.order_no,
-        customerId: order.customer_id,
         customerName: order.customer_name,
         orderDate: order.order_date,
         deliveryDate: order.delivery_date,
-        salesPerson: order.sales_person,
-        status: order.status,
-        totalAmount: order.total_amount,
+        status: finalStatus, // ⭐ 返回处理后的状态
         remark: order.remark,
         lines: lines.map(l => ({
-          id: l.id,
-          productId: l.product_id,
           productName: l.product_name,
           quantity: l.quantity,
-          unitPrice: l.unit_price,
-          amount: l.amount
         }))
       }
     });
+
   } catch (error) {
     console.error('获取订单详情错误:', error);
     res.status(500).json({ success: false, message: '服务器内部错误' });
   }
 };
+
 
 /**
  * 创建订单
