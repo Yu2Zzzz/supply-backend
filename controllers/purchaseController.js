@@ -17,14 +17,23 @@ const getPurchaseOrders = async (req, res) => {
       startDate = '',
       endDate = ''
     } = req.query;
+
     const offset = (page - 1) * pageSize;
 
     let whereClause = 'WHERE 1=1';
     const params = [];
 
+    // 关键词可搜索：采购单号、材料名称、供应商名称、销售订单号
     if (keyword) {
-      whereClause += ' AND (po.po_no LIKE ? OR m.name LIKE ? OR s.name LIKE ?)';
-      params.push(`%${keyword}%`, `%${keyword}%`, `%${keyword}%`);
+      whereClause += `
+        AND (
+          po.po_no LIKE ?
+          OR m.name LIKE ?
+          OR s.name LIKE ?
+          OR so.order_no LIKE ?
+        )
+      `;
+      params.push(`%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`);
     }
 
     if (status) {
@@ -52,30 +61,41 @@ const getPurchaseOrders = async (req, res) => {
       params.push(endDate);
     }
 
-    // 查询总数
+    // ---------- 查询总数 ----------
     const [countResult] = await db.query(`
       SELECT COUNT(*) as total 
       FROM purchase_orders po
       JOIN materials m ON po.material_id = m.id
       JOIN suppliers s ON po.supplier_id = s.id
+      LEFT JOIN sales_orders so ON po.sales_order_id = so.id
       ${whereClause}
     `, params);
+
     const total = countResult[0].total;
 
-    // 查询列表
+    // ---------- 查询分页列表 ----------
     const [orders] = await db.query(`
-      SELECT po.*, 
-             m.material_code, m.name as material_name, m.unit,
-             s.supplier_code, s.name as supplier_name
+      SELECT 
+        po.*,
+        m.material_code, 
+        m.name AS material_name,
+        m.unit,
+        s.supplier_code,
+        s.name AS supplier_name,
+        so.order_no AS sales_order_no,
+        c.name AS customer_name
       FROM purchase_orders po
       JOIN materials m ON po.material_id = m.id
       JOIN suppliers s ON po.supplier_id = s.id
+      LEFT JOIN sales_orders so ON po.sales_order_id = so.id
+      LEFT JOIN customers c ON so.customer_id = c.id
       ${whereClause}
       ORDER BY po.expected_date ASC, po.created_at DESC
       LIMIT ? OFFSET ?
     `, [...params, parseInt(pageSize), offset]);
 
-    res.json({
+    // ---------- 格式化返回 ----------
+    return res.json({
       success: true,
       data: {
         list: orders.map(o => ({
@@ -96,6 +116,9 @@ const getPurchaseOrders = async (req, res) => {
           actualDate: o.actual_date,
           status: o.status,
           remark: o.remark,
+          salesOrderId: o.sales_order_id,              // ⭐ 新增
+          salesOrderNo: o.sales_order_no,              // ⭐ 新增
+          customerName: o.customer_name,               // ⭐ 新增
           createdAt: o.created_at
         })),
         pagination: {
@@ -187,16 +210,7 @@ const createPurchaseOrder = async (req, res) => {
   const connection = await db.getConnection();
   
   try {
-    const { 
-      poNo, 
-      materialId, 
-      supplierId, 
-      quantity, 
-      unitPrice, 
-      orderDate, 
-      expectedDate, 
-      remark 
-    } = req.body;
+    const { materialId, supplierId, salesOrderId, quantity, unitPrice, orderDate, expectedDate, status, remark } = req.body;
 
     // 自动生成采购单号（如果没有提供）
     let finalPoNo = poNo;
@@ -229,9 +243,23 @@ const createPurchaseOrder = async (req, res) => {
 
     // 创建采购订单
     const [result] = await connection.query(`
-      INSERT INTO purchase_orders (po_no, material_id, supplier_id, quantity, unit_price, total_amount, order_date, expected_date, remark, created_by, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft')
-    `, [finalPoNo, materialId, supplierId, quantity, unitPrice || 0, totalAmount, orderDate, expectedDate, remark || '', req.user?.id || 1]);
+  INSERT INTO purchase_orders
+    (po_no, material_id, supplier_id, sales_order_id, quantity, unit_price, total_amount, order_date, expected_date, status, remark)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`,
+[
+  finalPoNo,               // po_no
+  materialId,              // material_id
+  supplierId,              // supplier_id
+  salesOrderId || null,    // sales_order_id ⭐ 你要新增的字段
+  quantity,                // quantity
+  unitPrice || 0,          // unit_price
+  totalAmount,             // total_amount
+  orderDate,               // order_date
+  expectedDate,            // expected_date
+  status || 'draft',       // status
+  remark || ''             // remark
+]);
 
     const poId = result.insertId;
 
