@@ -1,4 +1,5 @@
-// backend/server.js - 优化版本
+// backend/server.js - 优化版本（禁用 304 缓存）
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -15,37 +16,75 @@ const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log' }),
-  ],
-});
+    winston.format.colorize(),
+    winston.format.printf(info => {
+      const { timestamp, level, message, ...meta } = info;
 
-// 开发环境同时输出到控制台
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    )
-  }));
-}
+      // 如果 message 是对象，转成 JSON 字符串，避免 [object Object]
+      let msg = message;
+      if (typeof msg === 'object') {
+        try {
+          msg = JSON.stringify(msg);
+        } catch (e) {
+          msg = '[object]';
+        }
+      }
+
+      const metaString = Object.keys(meta).length
+        ? JSON.stringify(meta)
+        : '';
+
+      return `${timestamp} [${level}]: ${msg} ${metaString}`;
+    })
+  ),
+  transports: [new winston.transports.Console()],
+});
 
 // ============ Express 应用配置 ============
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// 🚀 修复 Railway / Docker / Nginx 代理导致的 Rate Limit 报错
-// 必须在使用 rateLimit 之前设置
+// 生产环境下信任一层代理（Railway / Nginx 等）
 if (process.env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1); // 表示信任一层反向代理
+  app.set('trust proxy', 1);
 }
 
+// ============ 禁用缓存 / 304（关键修复） ============
+
+// 关闭 ETag，避免命中 If-None-Match 产生 304
+app.set('etag', false);
+
+// 禁用浏览器 / 中间层缓存
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
+// 防御性：如果某些 handler 把状态码设成 304，这里强制改回 200
+app.use((req, res, next) => {
+  const originalJson = res.json.bind(res);
+  const originalSend = res.send.bind(res);
+
+  res.json = function (body) {
+    if (res.statusCode === 304) {
+      res.status(200);
+    }
+    return originalJson(body);
+  };
+
+  res.send = function (body) {
+    if (res.statusCode === 304) {
+      res.status(200);
+    }
+    return originalSend(body);
+  };
+
+  next();
+});
+
 // ============ 安全中间件 ============
-// Helmet - 设置安全的 HTTP 头
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -62,16 +101,14 @@ app.use(helmet({
   }
 }));
 
-// ============ CORS 配置优化 ============
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',') 
+// ============ CORS 配置 ============
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
   : ['http://localhost:5173', 'http://localhost:3000'];
 
 app.use(cors({
   origin: (origin, callback) => {
-    // 允许无 origin 的请求（比如移动应用、Postman）
-    if (!origin) return callback(null, true);
-    
+    if (!origin) return callback(null, true); // 允许 Postman 等
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -81,7 +118,7 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  maxAge: 86400 // 24小时预检缓存
+  maxAge: 86400
 }));
 
 // ============ 性能优化中间件 ============
@@ -93,7 +130,7 @@ app.use(compression({
     }
     return compression.filter(req, res);
   },
-  level: 6 // 压缩级别 1-9，6 是平衡点
+  level: 6
 }));
 
 // 响应时间记录
@@ -104,21 +141,20 @@ app.use(responseTime((req, res, time) => {
 // ============ Rate Limiting ============
 // 全局限流
 const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15分钟
-  max: 1000, // 限制1000次请求
+  windowMs: 15 * 60 * 1000,
+  max: 1000,
   message: {
     success: false,
     message: '请求过于频繁，请稍后再试'
   },
   standardHeaders: true,
   legacyHeaders: false,
-  // 根据 IP 和用户 ID 限流
   keyGenerator: (req) => {
     return req.user?.id || req.ip;
   }
 });
 
-// API 限流（更严格）
+// API 限流
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -128,17 +164,16 @@ const apiLimiter = rateLimit({
   }
 });
 
-// 登录限流（最严格）
+// 登录限流
 const loginLimiter = rateLimit({
-  windowMs: 60 * 1000,   // 1 分钟
-  max: 50,               // 1 分钟 50 次
+  windowMs: 60 * 1000,
+  max: 50,
   skipSuccessfulRequests: true,
   message: {
     success: false,
     message: '登录尝试次数过多，请稍后再试'
   }
 });
-
 
 app.use(globalLimiter);
 app.use('/api/', apiLimiter);
@@ -151,7 +186,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // ============ 请求日志中间件 ============
 app.use((req, res, next) => {
   const startTime = Date.now();
-  
+
   // 记录请求
   logger.info({
     type: 'request',
@@ -161,7 +196,7 @@ app.use((req, res, next) => {
     userAgent: req.get('user-agent'),
     userId: req.user?.id
   });
-  
+
   // 记录响应
   res.on('finish', () => {
     const duration = Date.now() - startTime;
@@ -174,11 +209,11 @@ app.use((req, res, next) => {
       userId: req.user?.id
     });
   });
-  
+
   next();
 });
 
-// ============ 健康检查（优化版） ============
+// ============ 健康检查 ============
 app.get('/health', (req, res) => {
   const healthCheck = {
     status: 'ok',
@@ -190,20 +225,19 @@ app.get('/health', (req, res) => {
     },
     environment: process.env.NODE_ENV || 'development'
   };
-  
+
   res.json(healthCheck);
 });
 
 // ============ API 路由 ============
 app.use('/api', routes);
-// 404 处理
+
+// 使用你已有的 errorHandler / notFound 中间件
 const { errorHandler, notFound } = require('./middlewares/errorHandler');
 app.use(notFound);
-
-// 全局错误处理（必须放在最后）
 app.use(errorHandler);
 
-// ============ 404 处理 ============
+// ============ 兜底 404 ============
 app.use((req, res) => {
   logger.warn({
     type: '404',
@@ -211,7 +245,7 @@ app.use((req, res) => {
     url: req.url,
     ip: req.ip
   });
-  
+
   res.status(404).json({
     success: false,
     message: '接口不存在',
@@ -219,9 +253,8 @@ app.use((req, res) => {
   });
 });
 
-// ============ 全局错误处理（增强版） ============
+// ============ 全局错误处理（增强版兜底） ============
 app.use((err, req, res, next) => {
-  // 记录错误
   logger.error({
     type: 'error',
     message: err.message,
@@ -231,8 +264,7 @@ app.use((err, req, res, next) => {
     ip: req.ip,
     userId: req.user?.id
   });
-  
-  // 开发环境返回详细错误
+
   if (process.env.NODE_ENV === 'development') {
     return res.status(err.status || 500).json({
       success: false,
@@ -241,8 +273,7 @@ app.use((err, req, res, next) => {
       error: err
     });
   }
-  
-  // 生产环境返回通用错误
+
   res.status(err.status || 500).json({
     success: false,
     message: err.isOperational ? err.message : '服务器内部错误'
@@ -252,17 +283,12 @@ app.use((err, req, res, next) => {
 // ============ 优雅关闭 ============
 const gracefulShutdown = () => {
   logger.info('收到关闭信号，正在优雅关闭...');
-  
+
   server.close(() => {
     logger.info('HTTP 服务器已关闭');
-    
-    // 关闭数据库连接等
-    // db.close();
-    
     process.exit(0);
   });
-  
-  // 强制关闭超时
+
   setTimeout(() => {
     logger.error('无法优雅关闭，强制退出');
     process.exit(1);
@@ -280,7 +306,7 @@ const server = app.listen(PORT, () => {
     environment: process.env.NODE_ENV || 'development',
     nodeVersion: process.version
   });
-  
+
   console.log(`
 ╔════════════════════════════════════════════════════╗
 ║   供应链管理系统 - 后端服务启动成功 (优化版)        ║
@@ -297,15 +323,13 @@ const server = app.listen(PORT, () => {
   `);
 });
 
-// 处理未捕获的异常
+// 未捕获异常 & 未处理 Promise
 process.on('uncaughtException', (err) => {
   logger.error({
     type: 'uncaughtException',
     message: err.message,
     stack: err.stack
   });
-  
-  // 优雅关闭
   gracefulShutdown();
 });
 
@@ -317,4 +341,4 @@ process.on('unhandledRejection', (reason, promise) => {
   });
 });
 
-module.exports = app; // 导出 app 供测试使用
+module.expor
