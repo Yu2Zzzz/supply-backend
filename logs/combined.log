@@ -8035,3 +8035,10 @@
 {"level":"info","message":"收到关闭信号，正在优雅关闭...","timestamp":"2025-12-10T01:28:26.088Z"}
 {"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T01:28:30.813Z"}
 {"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T01:30:30.203Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T02:16:20.511Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T02:37:42.881Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T02:55:08.510Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T02:58:56.961Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T02:59:08.446Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T03:00:59.175Z"}
+{"level":"info","message":"收到关闭信号，正在优雅关闭...","timestamp":"2025-12-10T03:07:28.480Z"}
