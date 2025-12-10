@@ -36,13 +36,13 @@ const login = async (req, res) => {
 
     const user = users[0];
 
-    // 检查账号状态
-    if (user.status !== 'active') {
-      return res.status(403).json({
-        success: false,
-        message: '账号已被禁用，请联系管理员'
-      });
-    }
+    // 检查账号状态（is_active 字段: 1=启用, 0=禁用）
+if (user.is_active !== 1) {
+  return res.status(403).json({
+    success: false,
+    message: '账号已被禁用，请联系管理员'
+  });
+}
 
     // 验证密码
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
