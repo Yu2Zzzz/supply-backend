@@ -1,95 +1,102 @@
-// backend/controllers/orderController.js - 安全简化版
-const db = require('../config/db');
+﻿// backend/controllers/orderController.js - 安全简化版
+// controllers/orderController.js
+const { pool } = require('../config/database');
+const { asyncHandler, AppError } = require('../middlewares/errorHandler');
+const { paginated, success } = require('../utils/responseFormatter');
+const { sanitizePagination } = require('../utils/validator');
 
 /**
- * 获取销售订单列表 - 简化版（移除所有复杂计算）
+ * 获取订单列表
  */
-const getOrders = async (req, res) => {
-  try {
-    const { page = 1, pageSize = 50, keyword = '', status = '' } = req.query;
-    const offset = (page - 1) * pageSize;
+const getOrders = asyncHandler(async (req, res) => {
+  const { page, pageSize } = sanitizePagination(req.query.page, req.query.pageSize);
+  const { keyword = '', status = '' } = req.query;
+  
+  const offset = (page - 1) * pageSize;
+  let whereClause = 'WHERE 1=1';
+  const params = [];
 
-    let whereClause = 'WHERE 1=1';
-    const params = [];
-
-    if (keyword) {
-      whereClause += ' AND (o.order_no LIKE ? OR c.name LIKE ?)';
-      params.push(`%${keyword}%`, `%${keyword}%`);
-    }
-
-    if (status) {
-      whereClause += ' AND o.status = ?';
-      params.push(status);
-    }
-
-    // 查询总数
-    const [countResult] = await db.query(`
-      SELECT COUNT(*) as total 
-      FROM sales_orders o
-      LEFT JOIN customers c ON o.customer_id = c.id
-      ${whereClause}
-    `, params);
-
-    const total = countResult[0].total;
-
-    // 查询订单列表
-    const [orders] = await db.query(`
-      SELECT o.*, 
-             c.name as customer_name, 
-             c.customer_code
-      FROM sales_orders o
-      LEFT JOIN customers c ON o.customer_id = c.id
-      ${whereClause}
-      ORDER BY o.created_at DESC
-      LIMIT ? OFFSET ?
-    `, [...params, parseInt(pageSize), offset]);
-
-    // 获取每个订单的产品明细
-    for (let order of orders) {
-      try {
-        const [lines] = await db.query(`
-          SELECT ol.*, p.name as product_name, p.id as product_id
-          FROM order_lines ol
-          LEFT JOIN products p ON ol.product_id = p.id
-          WHERE ol.order_id = ?
-        `, [order.id]);
-        
-        order.lines = lines;
-      } catch (lineError) {
-        console.error(`获取订单${order.id}明细失败:`, lineError);
-        order.lines = [];
-      }
-    }
-
-    // 返回数据
-    res.json({
-      success: true,
-      data: {
-        list: orders.map(o => ({
-          id: o.id,
-          orderNo: o.order_no,
-          customerName: o.customer_name,
-          orderDate: o.order_date,
-          deliveryDate: o.delivery_date,
-          salesPerson: o.sales_person,
-          status: o.status,
-          remark: o.remark,
-          lines: o.lines || []
-        })),
-        pagination: { 
-          page: parseInt(page), 
-          pageSize: parseInt(pageSize), 
-          total 
-        }
-      }
-    });
-  } catch (error) {
-    console.error('获取订单列表错误:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: '服务器内部错误: ' + error.message 
-    });
+  if (keyword) {
+    whereClause += ' AND (o.order_no LIKE ? OR c.name LIKE ?)';
+    params.push(`%${keyword}%`, `%${keyword}%`);
   }
+
+  if (status) {
+    whereClause += ' AND o.status = ?';
+    params.push(status);
+  }
+
+  // 查询总数
+  const [countResult] = await pool.query(`
+    SELECT COUNT(*) as total 
+    FROM sales_orders o
+    LEFT JOIN customers c ON o.customer_id = c.id
+    ${whereClause}
+  `, params);
+
+  const total = countResult[0].total;
+
+  // 查询订单列表
+  const [orders] = await pool.query(`
+    SELECT 
+      o.id, o.order_no, o.customer_id, o.order_date, o.delivery_date,
+      o.sales_person, o.status, o.total_amount, o.remark, o.created_at,
+      c.name as customer_name, c.customer_code
+    FROM sales_orders o
+    LEFT JOIN customers c ON o.customer_id = c.id
+    ${whereClause}
+    ORDER BY o.created_at DESC
+    LIMIT ? OFFSET ?
+  `, [...params, pageSize, offset]);
+
+  // 获取订单明细
+  for (let order of orders) {
+    const [lines] = await pool.query(`
+      SELECT 
+        ol.id, ol.product_id, ol.quantity, ol.unit_price, ol.amount, ol.remark,
+        p.name as product_name, p.product_code
+      FROM order_lines ol
+      LEFT JOIN products p ON ol.product_id = p.id
+      WHERE ol.order_id = ?
+    `, [order.id]);
+    order.lines = lines;
+  }
+
+  // 转换为驼峰命名
+  const result = orders.map(o => ({
+    id: o.id,
+    orderNo: o.order_no,
+    customerId: o.customer_id,
+    customerName: o.customer_name,
+    customerCode: o.customer_code,
+    orderDate: o.order_date,
+    deliveryDate: o.delivery_date,
+    salesPerson: o.sales_person,
+    status: o.status,
+    totalAmount: parseFloat(o.total_amount || 0),
+    remark: o.remark,
+    createdAt: o.created_at,
+    lines: (o.lines || []).map(l => ({
+      id: l.id,
+      productId: l.product_id,
+      productName: l.product_name,
+      productCode: l.product_code,
+      quantity: parseFloat(l.quantity),
+      unitPrice: parseFloat(l.unit_price || 0),
+      amount: parseFloat(l.amount || 0),
+      remark: l.remark
+    }))
+  }));
+
+  res.json(paginated(result, { page, pageSize, total }));
+});
+
+// 保留你原有的其他函数: getOrderById, createOrder, updateOrder, deleteOrder...
+// 只需要在文件开头添加导入即可
+
+module.exports = {
+  getOrders,
+  // ... 你原有的其他导出
 };
 
 /**
@@ -99,7 +106,7 @@ const getOrderById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [orders] = await db.query(`
+    const [orders] = await pool.query(`
       SELECT o.*, c.name as customer_name
       FROM sales_orders o
       LEFT JOIN customers c ON o.customer_id = c.id
@@ -112,7 +119,7 @@ const getOrderById = async (req, res) => {
 
     const order = orders[0];
 
-    const [lines] = await db.query(`
+    const [lines] = await pool.query(`
       SELECT ol.*, p.name as product_name, p.id as product_id 
       FROM order_lines ol
       LEFT JOIN products p ON ol.product_id = p.id
@@ -305,7 +312,7 @@ const deleteOrder = async (req, res) => {
 
     // 只有 pending 能删除，否则改为 cancelled
     if (existing[0].status !== 'pending') {
-      await db.query("UPDATE sales_orders SET status = 'cancelled' WHERE id = ?", [id]);
+      await pool.query("UPDATE sales_orders SET status = 'cancelled' WHERE id = ?", [id]);
       return res.json({ success: true, message: '订单已取消' });
     }
 
@@ -334,7 +341,7 @@ const deleteOrder = async (req, res) => {
  */
 const getSalesPersons = async (req, res) => {
   try {
-    const [result] = await db.query(`
+    const [result] = await pool.query(`
       SELECT DISTINCT sales_person 
       FROM sales_orders 
       WHERE sales_person IS NOT NULL AND sales_person != ''

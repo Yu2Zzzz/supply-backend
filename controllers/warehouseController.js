@@ -1,5 +1,5 @@
-// backend/controllers/warehouseController.js
-const db = require('../config/db');
+﻿// backend/controllers/warehouseController.js
+const { pool } = require('../config/database');
 
 /**
  * 获取仓库列表
@@ -24,14 +24,14 @@ const getWarehouses = async (req, res) => {
     }
 
     // 查询总数
-    const [countResult] = await db.query(
+    const [countResult] = await pool.query(
       `SELECT COUNT(*) as total FROM warehouses ${whereClause}`,
       params
     );
     const total = countResult[0].total;
 
     // 查询列表
-    const [warehouses] = await db.query(`
+    const [warehouses] = await pool.query(`
       SELECT w.*,
              (SELECT COUNT(*) FROM inventory i WHERE i.warehouse_id = w.id) as material_count,
              (SELECT SUM(i.quantity) FROM inventory i WHERE i.warehouse_id = w.id) as total_stock
@@ -83,7 +83,7 @@ const getWarehouseById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [warehouses] = await db.query('SELECT * FROM warehouses WHERE id = ?', [id]);
+    const [warehouses] = await pool.query('SELECT * FROM warehouses WHERE id = ?', [id]);
 
     if (warehouses.length === 0) {
       return res.status(404).json({
@@ -93,7 +93,7 @@ const getWarehouseById = async (req, res) => {
     }
 
     // 获取该仓库的库存
-    const [inventory] = await db.query(`
+    const [inventory] = await pool.query(`
       SELECT i.*, m.material_code, m.name as material_name, m.unit
       FROM inventory i
       JOIN materials m ON i.material_id = m.id
@@ -150,7 +150,7 @@ const createWarehouse = async (req, res) => {
       });
     }
 
-    const [result] = await db.query(`
+    const [result] = await pool.query(`
       INSERT INTO warehouses (warehouse_code, name, location, capacity, manager, remark)
       VALUES (?, ?, ?, ?, ?, ?)
     `, [warehouseCode, name, location, capacity, manager, remark]);
@@ -188,7 +188,7 @@ const updateWarehouse = async (req, res) => {
     const { warehouseCode, name, location, capacity, manager, status, remark } = req.body;
 
     // 检查是否存在
-    const [existing] = await db.query('SELECT id FROM warehouses WHERE id = ?', [id]);
+    const [existing] = await pool.query('SELECT id FROM warehouses WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -196,7 +196,7 @@ const updateWarehouse = async (req, res) => {
       });
     }
 
-    await db.query(`
+    await pool.query(`
       UPDATE warehouses 
       SET warehouse_code = ?, name = ?, location = ?, capacity = ?, manager = ?, status = ?, remark = ?
       WHERE id = ?
@@ -233,7 +233,7 @@ const deleteWarehouse = async (req, res) => {
     const { id } = req.params;
 
     // 检查是否存在
-    const [existing] = await db.query('SELECT id FROM warehouses WHERE id = ?', [id]);
+    const [existing] = await pool.query('SELECT id FROM warehouses WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -242,7 +242,7 @@ const deleteWarehouse = async (req, res) => {
     }
 
     // 检查是否有库存
-    const [inv] = await db.query('SELECT COUNT(*) as count FROM inventory WHERE warehouse_id = ? AND quantity > 0', [id]);
+    const [inv] = await pool.query('SELECT COUNT(*) as count FROM inventory WHERE warehouse_id = ? AND quantity > 0', [id]);
     
     if (inv[0].count > 0) {
       return res.status(400).json({
@@ -252,8 +252,8 @@ const deleteWarehouse = async (req, res) => {
     }
 
     // 删除库存记录和仓库
-    await db.query('DELETE FROM inventory WHERE warehouse_id = ?', [id]);
-    await db.query('DELETE FROM warehouses WHERE id = ?', [id]);
+    await pool.query('DELETE FROM inventory WHERE warehouse_id = ?', [id]);
+    await pool.query('DELETE FROM warehouses WHERE id = ?', [id]);
 
     res.json({
       success: true,

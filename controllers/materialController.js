@@ -1,5 +1,5 @@
-// backend/controllers/materialController.js
-const db = require('../config/db');
+﻿// backend/controllers/materialController.js
+const { pool } = require('../config/database');
 
 /**
  * 获取物料列表
@@ -34,14 +34,14 @@ const getMaterials = async (req, res) => {
     }
 
     // 查询总数
-    const [countResult] = await db.query(
+    const [countResult] = await pool.query(
       `SELECT COUNT(*) as total FROM materials m ${whereClause}`,
       params
     );
     const total = countResult[0].total;
 
     // 查询列表（包含库存和在途数量）
-    const [materials] = await db.query(`
+    const [materials] = await pool.query(`
       SELECT m.*,
              COALESCE((SELECT SUM(i.quantity) FROM inventory i WHERE i.material_id = m.id), 0) as current_stock,
             COALESCE((
@@ -103,7 +103,7 @@ const getMaterialById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [materials] = await db.query('SELECT * FROM materials WHERE id = ?', [id]);
+    const [materials] = await pool.query('SELECT * FROM materials WHERE id = ?', [id]);
 
     if (materials.length === 0) {
       return res.status(404).json({
@@ -113,7 +113,7 @@ const getMaterialById = async (req, res) => {
     }
 
     // 获取供应商信息
-    const [suppliers] = await db.query(`
+    const [suppliers] = await pool.query(`
       SELECT ms.*, s.supplier_code, s.name as supplier_name, s.on_time_rate, s.quality_rate
       FROM material_suppliers ms
       JOIN suppliers s ON ms.supplier_id = s.id
@@ -121,7 +121,7 @@ const getMaterialById = async (req, res) => {
     `, [id]);
 
     // 获取库存信息
-    const [inventory] = await db.query(`
+    const [inventory] = await pool.query(`
       SELECT i.*, w.warehouse_code, w.name as warehouse_name
       FROM inventory i
       JOIN warehouses w ON i.warehouse_id = w.id
@@ -129,7 +129,7 @@ const getMaterialById = async (req, res) => {
     `, [id]);
 
     // 获取在途信息：直接从 purchase_orders 汇总
-    const [inTransit] = await db.query(`
+    const [inTransit] = await pool.query(`
   SELECT 
     po.id,
     po.po_no,
@@ -225,7 +225,7 @@ const createMaterial = async (req, res) => {
       });
     }
 
-    const [result] = await db.query(`
+    const [result] = await pool.query(`
       INSERT INTO materials (material_code, name, spec, unit, price, safe_stock, lead_time, buyer, category)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [materialCode, name, spec, unit, price, safeStock, leadTime, buyer, category]);
@@ -263,7 +263,7 @@ const updateMaterial = async (req, res) => {
     const { materialCode, name, spec, unit, price, safeStock, leadTime, buyer, category, status } = req.body;
 
     // 检查是否存在
-    const [existing] = await db.query('SELECT id FROM materials WHERE id = ?', [id]);
+    const [existing] = await pool.query('SELECT id FROM materials WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -271,7 +271,7 @@ const updateMaterial = async (req, res) => {
       });
     }
 
-    await db.query(`
+    await pool.query(`
       UPDATE materials 
       SET material_code = ?, name = ?, spec = ?, unit = ?, price = ?, 
           safe_stock = ?, lead_time = ?, buyer = ?, category = ?, status = ?
@@ -309,7 +309,7 @@ const deleteMaterial = async (req, res) => {
     const { id } = req.params;
 
     // 检查是否存在
-    const [existing] = await db.query('SELECT id FROM materials WHERE id = ?', [id]);
+    const [existing] = await pool.query('SELECT id FROM materials WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -318,12 +318,12 @@ const deleteMaterial = async (req, res) => {
     }
 
     // 检查是否有库存或采购订单
-    const [inv] = await db.query('SELECT SUM(quantity) as qty FROM inventory WHERE material_id = ?', [id]);
-    const [po] = await db.query('SELECT COUNT(*) as count FROM purchase_orders WHERE material_id = ?', [id]);
+    const [inv] = await pool.query('SELECT SUM(quantity) as qty FROM inventory WHERE material_id = ?', [id]);
+    const [po] = await pool.query('SELECT COUNT(*) as count FROM purchase_orders WHERE material_id = ?', [id]);
 
     if ((inv[0].qty && inv[0].qty > 0) || po[0].count > 0) {
       // 软删除
-      await db.query("UPDATE materials SET status = 'inactive' WHERE id = ?", [id]);
+      await pool.query("UPDATE materials SET status = 'inactive' WHERE id = ?", [id]);
       return res.json({
         success: true,
         message: '物料已停用（存在库存或采购记录，无法删除）'
@@ -331,9 +331,9 @@ const deleteMaterial = async (req, res) => {
     }
 
     // 硬删除
-    await db.query('DELETE FROM material_suppliers WHERE material_id = ?', [id]);
-    await db.query('DELETE FROM bom WHERE material_id = ?', [id]);
-    await db.query('DELETE FROM materials WHERE id = ?', [id]);
+    await pool.query('DELETE FROM material_suppliers WHERE material_id = ?', [id]);
+    await pool.query('DELETE FROM bom WHERE material_id = ?', [id]);
+    await pool.query('DELETE FROM materials WHERE id = ?', [id]);
 
     res.json({
       success: true,
@@ -355,7 +355,7 @@ const deleteMaterial = async (req, res) => {
  */
 const getBuyers = async (req, res) => {
   try {
-    const [result] = await db.query(`
+    const [result] = await pool.query(`
       SELECT DISTINCT buyer 
       FROM materials 
       WHERE buyer IS NOT NULL AND buyer != ''
@@ -394,7 +394,7 @@ const updateInventory = async (req, res) => {
     }
 
     // 检查物料是否存在
-    const [material] = await db.query('SELECT id FROM materials WHERE id = ?', [id]);
+    const [material] = await pool.query('SELECT id FROM materials WHERE id = ?', [id]);
     if (material.length === 0) {
       return res.status(404).json({
         success: false,
@@ -403,7 +403,7 @@ const updateInventory = async (req, res) => {
     }
 
     // 检查是否已有库存记录
-    const [existing] = await db.query(
+    const [existing] = await pool.query(
       'SELECT id, quantity FROM inventory WHERE material_id = ? AND warehouse_id = ?',
       [id, warehouseId]
     );
@@ -417,12 +417,12 @@ const updateInventory = async (req, res) => {
         if (newQuantity < 0) newQuantity = 0;
       }
       
-      await db.query(
+      await pool.query(
         'UPDATE inventory SET quantity = ? WHERE id = ?',
         [newQuantity, existing[0].id]
       );
     } else {
-      await db.query(
+      await pool.query(
         'INSERT INTO inventory (material_id, warehouse_id, quantity) VALUES (?, ?, ?)',
         [id, warehouseId, newQuantity]
       );

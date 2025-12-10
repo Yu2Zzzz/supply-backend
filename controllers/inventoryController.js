@@ -1,5 +1,5 @@
-// backend/controllers/inventoryController.js
-const db = require('../config/db');
+﻿// backend/controllers/inventoryController.js
+const { pool } = require('../config/database');
 
 /**
  * 获取库存列表
@@ -87,10 +87,10 @@ const getInventory = async (req, res) => {
       `;
     }
 
-    const [countResult] = await db.query(countQuery, params);
+    const [countResult] = await pool.query(countQuery, params);
     const total = countResult[0]?.total || 0;
 
-    const [rows] = await db.query(query, [...params, parseInt(pageSize), offset]);
+    const [rows] = await pool.query(query, [...params, parseInt(pageSize), offset]);
 
     // 格式化响应
     const list = rows.map(row => {
@@ -181,7 +181,7 @@ const getInventoryById = async (req, res) => {
       `;
     }
 
-    const [rows] = await db.query(query, [id]);
+    const [rows] = await pool.query(query, [id]);
 
     if (rows.length === 0) {
       return res.status(404).json({
@@ -229,7 +229,7 @@ const createInventory = async (req, res) => {
     }
 
     // 检查是否已存在
-    const [existing] = await db.query(
+    const [existing] = await pool.query(
       `SELECT id FROM ${table} WHERE ${itemColumn} = ? AND warehouse_id = ?`,
       [itemId, warehouseId]
     );
@@ -241,7 +241,7 @@ const createInventory = async (req, res) => {
       });
     }
 
-    const [result] = await db.query(
+    const [result] = await pool.query(
       `INSERT INTO ${table} (${itemColumn}, warehouse_id, quantity, safety_stock) VALUES (?, ?, ?, ?)`,
       [itemId, warehouseId, quantity, safetyStock]
     );
@@ -273,7 +273,7 @@ const updateInventory = async (req, res) => {
     const table = type === 'product' ? 'product_inventory' : 'inventory';
 
     // 检查记录是否存在
-    const [existing] = await db.query(`SELECT id FROM ${table} WHERE id = ?`, [id]);
+    const [existing] = await pool.query(`SELECT id FROM ${table} WHERE id = ?`, [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -302,7 +302,7 @@ const updateInventory = async (req, res) => {
     }
 
     values.push(id);
-    await db.query(`UPDATE ${table} SET ${updates.join(', ')} WHERE id = ?`, values);
+    await pool.query(`UPDATE ${table} SET ${updates.join(', ')} WHERE id = ?`, values);
 
     res.json({
       success: true,
@@ -329,7 +329,7 @@ const deleteInventory = async (req, res) => {
 
     const table = type === 'product' ? 'product_inventory' : 'inventory';
 
-    const [existing] = await db.query(`SELECT id FROM ${table} WHERE id = ?`, [id]);
+    const [existing] = await pool.query(`SELECT id FROM ${table} WHERE id = ?`, [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -337,7 +337,7 @@ const deleteInventory = async (req, res) => {
       });
     }
 
-    await db.query(`DELETE FROM ${table} WHERE id = ?`, [id]);
+    await pool.query(`DELETE FROM ${table} WHERE id = ?`, [id]);
 
     res.json({
       success: true,
@@ -371,7 +371,7 @@ const adjustInventory = async (req, res) => {
 
     const table = type === 'product' ? 'product_inventory' : 'inventory';
 
-    const [existing] = await db.query(`SELECT id, quantity FROM ${table} WHERE id = ?`, [id]);
+    const [existing] = await pool.query(`SELECT id, quantity FROM ${table} WHERE id = ?`, [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -399,7 +399,7 @@ const adjustInventory = async (req, res) => {
       });
     }
 
-    await db.query(`UPDATE ${table} SET quantity = ? WHERE id = ?`, [newQty, id]);
+    await pool.query(`UPDATE ${table} SET quantity = ? WHERE id = ?`, [newQty, id]);
 
     res.json({
       success: true,

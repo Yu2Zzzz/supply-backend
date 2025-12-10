@@ -1,4 +1,4 @@
-// backend/routes/index.js - 优化版本
+﻿// backend/routes/index.js - 优化版本
 const express = require('express');
 const router = express.Router();
 
@@ -57,7 +57,7 @@ router.delete('/sales-orders/:id', roleMiddleware(PERMISSIONS.SALES_ACCESS), ord
 
 // ==================== 客户管理 ====================
 // ✅ 优化：使用独立的 controller
-const db = require('../config/db');
+const { pool } = require('../config/database');
 const { success, error } = require('../utils/response');
 
 // 获取客户列表
@@ -80,14 +80,14 @@ router.get('/customers', roleMiddleware(PERMISSIONS.SALES_ACCESS), async (req, r
     }
 
     // 查询总数
-    const [countResult] = await db.query(
+    const [countResult] = await pool.query(
       `SELECT COUNT(*) as total FROM customers ${whereClause}`,
       params
     );
     const total = countResult[0].total;
 
     // 查询列表
-    const [customers] = await db.query(`
+    const [customers] = await pool.query(`
       SELECT id, customer_code, name, contact_person, phone, email, address, status, created_at
       FROM customers 
       ${whereClause}
@@ -132,7 +132,7 @@ router.post('/customers', roleMiddleware(PERMISSIONS.SALES_ACCESS), async (req, 
       return res.status(400).json({ success: false, message: '客户编码和名称不能为空' });
     }
 
-    const [result] = await db.query(
+    const [result] = await pool.query(
       'INSERT INTO customers (customer_code, name, contact_person, phone, email, address) VALUES (?, ?, ?, ?, ?, ?)',
       [customerCode, name, contactPerson, phone, email, address]
     );
@@ -225,7 +225,7 @@ router.get('/warnings', async (req, res) => {
 
     query += ' ORDER BY FIELD(w.level, "RED", "ORANGE", "YELLOW", "BLUE"), w.created_at DESC';
 
-    const [warnings] = await db.query(query);
+    const [warnings] = await pool.query(query);
 
     res.json({
       success: true,
@@ -264,7 +264,7 @@ router.get('/data', async (req, res) => {
 
     // 管理员和业务员可以看订单
     if (['admin', 'sales'].includes(userRole)) {
-      const [orders] = await db.query(`
+      const [orders] = await pool.query(`
         SELECT o.id, o.order_no, c.name as customer, o.order_date, o.delivery_date, o.sales_person
         FROM sales_orders o
         JOIN customers c ON o.customer_id = c.id
@@ -279,7 +279,7 @@ router.get('/data', async (req, res) => {
         salesPerson: o.sales_person
       }));
 
-      const [orderLines] = await db.query(`
+      const [orderLines] = await pool.query(`
         SELECT ol.order_id, o.order_no as orderId, p.product_code as productCode, 
                p.name as productName, ol.quantity as qty
         FROM order_lines ol
@@ -292,7 +292,7 @@ router.get('/data', async (req, res) => {
 
     // 管理员和采购员可以看物料
     if (['admin', 'purchaser'].includes(userRole)) {
-      const [mats] = await db.query(`
+      const [mats] = await pool.query(`
         SELECT m.*, 
                COALESCE((SELECT SUM(i.quantity) FROM inventory i WHERE i.material_id = m.id), 0) as inv,
               COALESCE((
@@ -320,7 +320,7 @@ router.get('/data', async (req, res) => {
       }));
 
       // 采购订单
-      const [pos] = await db.query(`
+      const [pos] = await pool.query(`
         SELECT po.po_no as po, m.material_code as mat, s.name as supplier,
                po.quantity as qty, po.total_amount as amt, po.expected_date as date, po.status
         FROM purchase_orders po
@@ -331,7 +331,7 @@ router.get('/data', async (req, res) => {
       result.pos = pos;
 
       // 供应商
-      const [suppliers] = await db.query(`
+      const [suppliers] = await pool.query(`
         SELECT ms.material_id, m.material_code as mat, s.id, s.name, 
                ms.is_main as main, s.on_time_rate as onTime, s.quality_rate as quality
         FROM material_suppliers ms
@@ -350,10 +350,10 @@ router.get('/data', async (req, res) => {
 
     // 产品和BOM（管理员和采购员可以看）
     if (['admin', 'purchaser'].includes(userRole)) {
-      const [products] = await db.query('SELECT product_code as code, name FROM products WHERE status = "active"');
+      const [products] = await pool.query('SELECT product_code as code, name FROM products WHERE status = "active"');
       result.products = products;
 
-      const [bom] = await db.query(`
+      const [bom] = await pool.query(`
         SELECT p.product_code as p, m.material_code as m, b.quantity as c
         FROM bom b
         JOIN products p ON b.product_id = p.id

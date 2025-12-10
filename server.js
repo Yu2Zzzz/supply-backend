@@ -196,6 +196,12 @@ app.get('/health', (req, res) => {
 
 // ============ API 路由 ============
 app.use('/api', routes);
+// 404 处理
+const { errorHandler, notFound } = require('./middlewares/errorHandler');
+app.use(notFound);
+
+// 全局错误处理（必须放在最后）
+app.use(errorHandler);
 
 // ============ 404 处理 ============
 app.use((req, res) => {

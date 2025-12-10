@@ -8015,3 +8015,23 @@
 {"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-09T16:30:12.691Z"}
 {"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-09T22:24:49.503Z"}
 {"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T00:39:33.922Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T01:03:06.566Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/health","userAgent":"curl/8.16.0"},"timestamp":"2025-12-10T01:03:52.867Z"}
+{"level":"info","message":"GET /health - 2.31ms","timestamp":"2025-12-10T01:03:52.869Z"}
+{"level":"info","message":{"duration":"3ms","method":"GET","statusCode":200,"type":"response","url":"/health"},"timestamp":"2025-12-10T01:03:52.870Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/health","userAgent":"curl/8.16.0"},"timestamp":"2025-12-10T01:03:52.886Z"}
+{"level":"info","message":"GET /health - 2.70ms","timestamp":"2025-12-10T01:03:52.886Z"}
+{"level":"info","message":{"duration":"0ms","method":"GET","statusCode":401,"type":"response","url":"/health"},"timestamp":"2025-12-10T01:03:52.886Z"}
+{"level":"info","message":{"ip":"::1","method":"GET","type":"request","url":"/api/sales-orders","userAgent":"curl/8.16.0"},"timestamp":"2025-12-10T01:03:55.465Z"}
+{"level":"info","message":"GET /sales-orders - 0.63ms","timestamp":"2025-12-10T01:03:55.465Z"}
+{"level":"info","message":{"duration":"1ms","method":"GET","statusCode":401,"type":"response","url":"/sales-orders"},"timestamp":"2025-12-10T01:03:55.466Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"curl/8.16.0"},"timestamp":"2025-12-10T01:04:21.578Z"}
+{"level":"info","message":"POST /auth/login - 785.72ms","timestamp":"2025-12-10T01:04:22.355Z"}
+{"level":"info","message":{"duration":"777ms","method":"POST","statusCode":403,"type":"response","url":"/auth/login"},"timestamp":"2025-12-10T01:04:22.355Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T01:09:36.440Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T01:27:51.094Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T01:27:55.214Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T01:28:09.689Z"}
+{"level":"info","message":"收到关闭信号，正在优雅关闭...","timestamp":"2025-12-10T01:28:26.088Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T01:28:30.813Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T01:30:30.203Z"}

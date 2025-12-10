@@ -1,6 +1,6 @@
-// backend/controllers/productController.js
+﻿// backend/controllers/productController.js
 const createCrudController = require('./crudFactory');
-const db = require('../config/db');
+const { pool } = require('../config/database');
 
 // 使用工厂函数创建基础CRUD
 const baseCrud = createCrudController({
@@ -33,14 +33,14 @@ const getProducts = async (req, res) => {
     }
 
     // 查询总数
-    const [countResult] = await db.query(
+    const [countResult] = await pool.query(
       `SELECT COUNT(*) as total FROM products p ${whereClause}`,
       params
     );
     const total = countResult[0].total;
 
     // 查询列表（包含BOM物料数量）
-    const [products] = await db.query(`
+    const [products] = await pool.query(`
       SELECT p.*, 
              (SELECT COUNT(*) FROM bom b WHERE b.product_id = p.id) as material_count
       FROM products p
@@ -90,7 +90,7 @@ const getProductById = async (req, res) => {
     const { id } = req.params;
 
     // 获取产品信息
-    const [products] = await db.query(
+    const [products] = await pool.query(
       'SELECT * FROM products WHERE id = ?',
       [id]
     );
@@ -103,7 +103,7 @@ const getProductById = async (req, res) => {
     }
 
     // 获取BOM物料
-    const [bomItems] = await db.query(`
+    const [bomItems] = await pool.query(`
       SELECT b.*, m.material_code, m.name as material_name, m.spec, m.unit
       FROM bom b
       JOIN materials m ON b.material_id = m.id
@@ -159,7 +159,7 @@ const createProduct = async (req, res) => {
       });
     }
 
-    const [result] = await db.query(`
+    const [result] = await pool.query(`
       INSERT INTO products (product_code, name, category, description, unit, status)
       VALUES (?, ?, ?, ?, ?, ?)
     `, [productCode, name, category, description, unit, status]);
@@ -196,7 +196,7 @@ const updateProduct = async (req, res) => {
     const { productCode, name, category, description, unit, status } = req.body;
 
     // 检查产品是否存在
-    const [existing] = await db.query('SELECT id FROM products WHERE id = ?', [id]);
+    const [existing] = await pool.query('SELECT id FROM products WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -204,7 +204,7 @@ const updateProduct = async (req, res) => {
       });
     }
 
-    await db.query(`
+    await pool.query(`
       UPDATE products 
       SET product_code = ?, name = ?, category = ?, description = ?, unit = ?, status = ?
       WHERE id = ?
@@ -240,7 +240,7 @@ const deleteProduct = async (req, res) => {
     const { id } = req.params;
 
     // 检查产品是否存在
-    const [existing] = await db.query('SELECT id FROM products WHERE id = ?', [id]);
+    const [existing] = await pool.query('SELECT id FROM products WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -249,14 +249,14 @@ const deleteProduct = async (req, res) => {
     }
 
     // 检查是否有关联订单
-    const [orders] = await db.query(
+    const [orders] = await pool.query(
       'SELECT COUNT(*) as count FROM order_lines WHERE product_id = ?',
       [id]
     );
 
     if (orders[0].count > 0) {
       // 软删除
-      await db.query("UPDATE products SET status = 'inactive' WHERE id = ?", [id]);
+      await pool.query("UPDATE products SET status = 'inactive' WHERE id = ?", [id]);
       return res.json({
         success: true,
         message: '产品已停用（存在关联订单，无法删除）'
@@ -264,7 +264,7 @@ const deleteProduct = async (req, res) => {
     }
 
     // 硬删除（会级联删除BOM）
-    await db.query('DELETE FROM products WHERE id = ?', [id]);
+    await pool.query('DELETE FROM products WHERE id = ?', [id]);
 
     res.json({
       success: true,

@@ -1,6 +1,6 @@
-// backend/controllers/userController.js - 支持查看已删除用户
+﻿// backend/controllers/userController.js - 支持查看已删除用户
 const bcrypt = require('bcryptjs');
-const db = require('../config/db');
+const { pool } = require('../config/database');
 
 /**
  * 获取用户列表
@@ -38,14 +38,14 @@ const getUsers = async (req, res) => {
     }
 
     // 查询总数
-    const [countResult] = await db.query(
+    const [countResult] = await pool.query(
       `SELECT COUNT(*) as total FROM users u ${whereClause}`,
       params
     );
     const total = countResult[0].total;
 
     // 查询用户列表
-    const [users] = await db.query(`
+    const [users] = await pool.query(`
       SELECT u.id, u.username, u.real_name, u.email, u.phone, 
              u.is_active, u.is_deleted, u.last_login, u.created_at,
              r.id as role_id, r.role_code, r.role_name
@@ -106,7 +106,7 @@ const createUser = async (req, res) => {
       });
     }
 
-    const [existing] = await db.query('SELECT id FROM users WHERE username = ?', [username]);
+    const [existing] = await pool.query('SELECT id FROM users WHERE username = ?', [username]);
     if (existing.length > 0) {
       return res.status(400).json({
         success: false,
@@ -116,7 +116,7 @@ const createUser = async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const [result] = await db.query(`
+    const [result] = await pool.query(`
       INSERT INTO users (username, password_hash, real_name, email, phone, role_id, is_deleted)
       VALUES (?, ?, ?, ?, ?, ?, 0)
     `, [username, passwordHash, realName, email, phone, roleId]);
@@ -145,7 +145,7 @@ const updateUser = async (req, res) => {
     const { id } = req.params;
     const { realName, email, phone, roleId, isActive, is_active, isDeleted, is_deleted } = req.body;
 
-    const [existing] = await db.query('SELECT id FROM users WHERE id = ?', [id]);
+    const [existing] = await pool.query('SELECT id FROM users WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -195,7 +195,7 @@ const updateUser = async (req, res) => {
 
     values.push(id);
 
-    await db.query(`
+    await pool.query(`
       UPDATE users 
       SET ${updates.join(', ')}
       WHERE id = ?
@@ -231,7 +231,7 @@ const resetPassword = async (req, res) => {
       });
     }
 
-    const [existing] = await db.query('SELECT id FROM users WHERE id = ?', [id]);
+    const [existing] = await pool.query('SELECT id FROM users WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -241,7 +241,7 @@ const resetPassword = async (req, res) => {
 
     const passwordHash = await bcrypt.hash(newPassword, 10);
 
-    await db.query('UPDATE users SET password_hash = ? WHERE id = ?', [passwordHash, id]);
+    await pool.query('UPDATE users SET password_hash = ? WHERE id = ?', [passwordHash, id]);
 
     res.json({
       success: true,
@@ -274,7 +274,7 @@ const deleteUser = async (req, res) => {
       });
     }
 
-    const [existing] = await db.query(
+    const [existing] = await pool.query(
       'SELECT id, username FROM users WHERE id = ? AND (is_deleted = 0 OR is_deleted IS NULL)', 
       [id]
     );
@@ -287,7 +287,7 @@ const deleteUser = async (req, res) => {
     }
 
     // ✅ 软删除：标记为已删除
-    const [result] = await db.query(`
+    const [result] = await pool.query(`
       UPDATE users 
       SET is_deleted = 1, is_active = 0
       WHERE id = ?
@@ -337,7 +337,7 @@ const restoreUser = async (req, res) => {
     console.log('♻️ 恢复用户请求 ID:', id);
 
     // 检查用户是否存在且已删除
-    const [existing] = await db.query(
+    const [existing] = await pool.query(
       'SELECT id, username FROM users WHERE id = ? AND is_deleted = 1', 
       [id]
     );
@@ -350,7 +350,7 @@ const restoreUser = async (req, res) => {
     }
 
     // 恢复用户：is_deleted = 0, is_active = 1
-    const [result] = await db.query(`
+    const [result] = await pool.query(`
       UPDATE users 
       SET is_deleted = 0, is_active = 1
       WHERE id = ?
@@ -378,7 +378,7 @@ const restoreUser = async (req, res) => {
  */
 const getRoles = async (req, res) => {
   try {
-    const [roles] = await db.query('SELECT * FROM roles ORDER BY id');
+    const [roles] = await pool.query('SELECT * FROM roles ORDER BY id');
 
     res.json({
       success: true,

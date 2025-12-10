@@ -1,5 +1,5 @@
-// backend/controllers/crudFactory.js
-const db = require('../config/db');
+﻿// backend/controllers/crudFactory.js
+const { pool } = require('../config/database');
 
 /**
  * 通用CRUD控制器工厂
@@ -48,14 +48,14 @@ const createCrudController = (config) => {
         }
 
         // 查询总数
-        const [countResult] = await db.query(
+        const [countResult] = await pool.query(
           `SELECT COUNT(*) as total FROM ${tableName} ${whereClause}`,
           params
         );
         const total = countResult[0].total;
 
         // 查询列表
-        const [rows] = await db.query(`
+        const [rows] = await pool.query(`
           SELECT ${selectFields.join(', ')} 
           FROM ${tableName} 
           ${whereClause}
@@ -92,7 +92,7 @@ const createCrudController = (config) => {
       try {
         const { id } = req.params;
 
-        const [rows] = await db.query(
+        const [rows] = await pool.query(
           `SELECT ${selectFields.join(', ')} FROM ${tableName} WHERE id = ?`,
           [id]
         );
@@ -128,7 +128,7 @@ const createCrudController = (config) => {
         const values = Object.values(data);
         const placeholders = fields.map(() => '?').join(', ');
 
-        const [result] = await db.query(
+        const [result] = await pool.query(
           `INSERT INTO ${tableName} (${fields.join(', ')}) VALUES (${placeholders})`,
           values
         );
@@ -174,7 +174,7 @@ const createCrudController = (config) => {
         const setClause = fields.map(f => `${f} = ?`).join(', ');
 
         // 检查是否存在
-        const [existing] = await db.query(`SELECT id FROM ${tableName} WHERE id = ?`, [id]);
+        const [existing] = await pool.query(`SELECT id FROM ${tableName} WHERE id = ?`, [id]);
         if (existing.length === 0) {
           return res.status(404).json({
             success: false,
@@ -182,7 +182,7 @@ const createCrudController = (config) => {
           });
         }
 
-        await db.query(
+        await pool.query(
           `UPDATE ${tableName} SET ${setClause} WHERE id = ?`,
           [...values, id]
         );
@@ -217,7 +217,7 @@ const createCrudController = (config) => {
         const { id } = req.params;
 
         // 检查是否存在
-        const [existing] = await db.query(`SELECT id FROM ${tableName} WHERE id = ?`, [id]);
+        const [existing] = await pool.query(`SELECT id FROM ${tableName} WHERE id = ?`, [id]);
         if (existing.length === 0) {
           return res.status(404).json({
             success: false,
@@ -227,9 +227,9 @@ const createCrudController = (config) => {
 
         // 软删除（如果有 status 字段）或硬删除
         try {
-          await db.query(`UPDATE ${tableName} SET status = 'inactive' WHERE id = ?`, [id]);
+          await pool.query(`UPDATE ${tableName} SET status = 'inactive' WHERE id = ?`, [id]);
         } catch {
-          await db.query(`DELETE FROM ${tableName} WHERE id = ?`, [id]);
+          await pool.query(`DELETE FROM ${tableName} WHERE id = ?`, [id]);
         }
 
         res.json({

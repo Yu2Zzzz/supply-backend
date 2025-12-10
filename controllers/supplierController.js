@@ -1,5 +1,5 @@
-// backend/controllers/supplierController.js
-const db = require('../config/db');
+﻿// backend/controllers/supplierController.js
+const { pool } = require('../config/database');
 
 /**
  * 获取供应商列表
@@ -24,14 +24,14 @@ const getSuppliers = async (req, res) => {
     }
 
     // 查询总数
-    const [countResult] = await db.query(
+    const [countResult] = await pool.query(
       `SELECT COUNT(*) as total FROM suppliers ${whereClause}`,
       params
     );
     const total = countResult[0].total;
 
     // 查询列表
-    const [suppliers] = await db.query(`
+    const [suppliers] = await pool.query(`
       SELECT * FROM suppliers 
       ${whereClause}
       ORDER BY created_at DESC
@@ -81,7 +81,7 @@ const getSupplierById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [suppliers] = await db.query('SELECT * FROM suppliers WHERE id = ?', [id]);
+    const [suppliers] = await pool.query('SELECT * FROM suppliers WHERE id = ?', [id]);
 
     if (suppliers.length === 0) {
       return res.status(404).json({
@@ -91,7 +91,7 @@ const getSupplierById = async (req, res) => {
     }
 
     // 获取该供应商供应的物料
-    const [materials] = await db.query(`
+    const [materials] = await pool.query(`
       SELECT m.id, m.material_code, m.name, ms.is_main, ms.price, ms.lead_time
       FROM material_suppliers ms
       JOIN materials m ON ms.material_id = m.id
@@ -160,7 +160,7 @@ const createSupplier = async (req, res) => {
       });
     }
 
-    const [result] = await db.query(`
+    const [result] = await pool.query(`
       INSERT INTO suppliers (supplier_code, name, contact_person, phone, email, address, on_time_rate, quality_rate, remark)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [supplierCode, name, contactPerson, phone, email, address, onTimeRate, qualityRate, remark]);
@@ -209,7 +209,7 @@ const updateSupplier = async (req, res) => {
     } = req.body;
 
     // 检查是否存在
-    const [existing] = await db.query('SELECT id FROM suppliers WHERE id = ?', [id]);
+    const [existing] = await pool.query('SELECT id FROM suppliers WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -217,7 +217,7 @@ const updateSupplier = async (req, res) => {
       });
     }
 
-    await db.query(`
+    await pool.query(`
       UPDATE suppliers 
       SET supplier_code = ?, name = ?, contact_person = ?, phone = ?, email = ?, 
           address = ?, on_time_rate = ?, quality_rate = ?, status = ?, remark = ?
@@ -255,7 +255,7 @@ const deleteSupplier = async (req, res) => {
     const { id } = req.params;
 
     // 检查是否存在
-    const [existing] = await db.query('SELECT id FROM suppliers WHERE id = ?', [id]);
+    const [existing] = await pool.query('SELECT id FROM suppliers WHERE id = ?', [id]);
     if (existing.length === 0) {
       return res.status(404).json({
         success: false,
@@ -264,11 +264,11 @@ const deleteSupplier = async (req, res) => {
     }
 
     // 检查是否有关联的采购订单
-    const [pos] = await db.query('SELECT COUNT(*) as count FROM purchase_orders WHERE supplier_id = ?', [id]);
+    const [pos] = await pool.query('SELECT COUNT(*) as count FROM purchase_orders WHERE supplier_id = ?', [id]);
     
     if (pos[0].count > 0) {
       // 软删除
-      await db.query("UPDATE suppliers SET status = 'inactive' WHERE id = ?", [id]);
+      await pool.query("UPDATE suppliers SET status = 'inactive' WHERE id = ?", [id]);
       return res.json({
         success: true,
         message: '供应商已停用（存在关联采购订单，无法删除）'
@@ -276,8 +276,8 @@ const deleteSupplier = async (req, res) => {
     }
 
     // 硬删除
-    await db.query('DELETE FROM material_suppliers WHERE supplier_id = ?', [id]);
-    await db.query('DELETE FROM suppliers WHERE id = ?', [id]);
+    await pool.query('DELETE FROM material_suppliers WHERE supplier_id = ?', [id]);
+    await pool.query('DELETE FROM suppliers WHERE id = ?', [id]);
 
     res.json({
       success: true,

@@ -1,5 +1,5 @@
-// backend/controllers/purchaseController.js
-const db = require('../config/db');
+﻿// backend/controllers/purchaseController.js
+const { pool } = require('../config/database');
 
 /**
  * 获取采购订单列表
@@ -62,7 +62,7 @@ const getPurchaseOrders = async (req, res) => {
     }
 
     // ---------- 查询总数 ----------
-    const [countResult] = await db.query(`
+    const [countResult] = await pool.query(`
       SELECT COUNT(*) as total 
       FROM purchase_orders po
       JOIN materials m ON po.material_id = m.id
@@ -74,7 +74,7 @@ const getPurchaseOrders = async (req, res) => {
     const total = countResult[0].total;
 
     // ---------- 查询分页列表 ----------
-    const [orders] = await db.query(`
+    const [orders] = await pool.query(`
       SELECT 
         po.*,
         m.material_code, 
@@ -148,7 +148,7 @@ const getPurchaseOrderById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [orders] = await db.query(`
+    const [orders] = await pool.query(`
       SELECT 
         po.*, 
         m.material_code, 
@@ -523,12 +523,12 @@ const deletePurchaseOrder = async (req, res) => {
 
     // 只有草稿状态可以删除，其他状态改为取消
     if (existing[0].status !== 'draft') {
-      await db.query(
+      await pool.query(
         "UPDATE purchase_orders SET status = 'cancelled' WHERE id = ?",
         [id]
       );
       try {
-        await db.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
+        await pool.query('DELETE FROM in_transit WHERE purchase_order_id = ?', [id]);
       } catch (e) {
         console.log('删除在途记录失败:', e.message);
       }
@@ -578,7 +578,7 @@ const confirmPurchaseOrder = async (req, res) => {
     const { id } = req.params;
     const { status: newStatus } = req.body;
 
-    const [existing] = await db.query(
+    const [existing] = await pool.query(
       'SELECT * FROM purchase_orders WHERE id = ?',
       [id]
     );
@@ -616,30 +616,30 @@ const confirmPurchaseOrder = async (req, res) => {
       });
     }
 
-    await db.query(
+    await pool.query(
       'UPDATE purchase_orders SET status = ? WHERE id = ?',
       [targetStatus, id]
     );
 
     if (targetStatus === 'arrived') {
       try {
-        await db.query(
+        await pool.query(
           'DELETE FROM in_transit WHERE purchase_order_id = ?',
           [id]
         );
         
-        const [invExisting] = await db.query(
+        const [invExisting] = await pool.query(
           'SELECT id, quantity FROM inventory WHERE material_id = ? AND warehouse_id = 1',
           [order.material_id]
         );
         
         if (invExisting.length > 0) {
-          await db.query(
+          await pool.query(
             'UPDATE inventory SET quantity = quantity + ? WHERE id = ?',
             [order.quantity, invExisting[0].id]
           );
         } else {
-          await db.query(
+          await pool.query(
             'INSERT INTO inventory (material_id, warehouse_id, quantity) VALUES (?, 1, ?)',
             [order.material_id, order.quantity]
           );
@@ -672,7 +672,7 @@ const generatePoNo = async (req, res) => {
     const today = new Date();
     const prefix = `PO${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}`;
     
-    const [result] = await db.query(
+    const [result] = await pool.query(
       'SELECT MAX(po_no) AS maxNo FROM purchase_orders WHERE po_no LIKE ?',
       [`${prefix}%`]
     );
