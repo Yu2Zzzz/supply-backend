@@ -1,7 +1,12 @@
-﻿// src/controllers/authController.js
+﻿// src/controllers/authController.js 或 backend/controllers/authController.js 视你的路径而定
 const bcrypt = require('bcryptjs');
-const { query } = require('../config/database');
-const { generateToken, getUserPermissions } = require('../middlewares/authMiddleware');
+const { pool } = require('../config/database');
+
+// ✅ 从 authMiddleware 只拿 generateToken
+const { generateToken } = require('../middlewares/authMiddleware');
+
+// ✅ 从 roleMiddleware 拿 getUserPermissions
+const { getUserPermissions } = require('../middlewares/roleMiddleware');
 
 /**
  * 用户登录
@@ -19,11 +24,11 @@ const login = async (req, res) => {
     }
 
     // 查询用户
-    const users = await query(
+    const [users] = await pool.query(
       `SELECT u.*, r.role_code, r.role_name
        FROM users u
        JOIN roles r ON u.role_id = r.id
-       WHERE u.username = ?`,
+       WHERE u.username = ? AND u.is_deleted = 0`,
       [username]
     );
 
@@ -36,13 +41,13 @@ const login = async (req, res) => {
 
     const user = users[0];
 
-    // 检查账号状态（is_active 字段: 1=启用, 0=禁用）
-if (user.is_active !== 1) {
-  return res.status(403).json({
-    success: false,
-    message: '账号已被禁用，请联系管理员'
-  });
-}
+    // 检查账号状态（is_active: 1=启用, 0=禁用）
+    if (user.is_active !== 1) {
+      return res.status(403).json({
+        success: false,
+        message: '账号已被禁用，请联系管理员'
+      });
+    }
 
     // 验证密码
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
@@ -54,7 +59,7 @@ if (user.is_active !== 1) {
     }
 
     // 更新最后登录时间
-    await query('UPDATE users SET last_login_at = NOW() WHERE id = ?', [user.id]);
+    await pool.query('UPDATE users SET last_login = NOW() WHERE id = ?', [user.id]);
 
     // 获取用户权限
     const permissions = await getUserPermissions(user.role_id);
@@ -138,7 +143,11 @@ const changePassword = async (req, res) => {
     }
 
     // 查询当前密码
-    const users = await query('SELECT password_hash FROM users WHERE id = ?', [userId]);
+    const [users] = await pool.query(
+      'SELECT password_hash FROM users WHERE id = ? AND is_deleted = 0',
+      [userId]
+    );
+    
     if (users.length === 0) {
       return res.status(404).json({
         success: false,
@@ -157,7 +166,10 @@ const changePassword = async (req, res) => {
 
     // 加密新密码并更新
     const newPasswordHash = await bcrypt.hash(newPassword, 10);
-    await query('UPDATE users SET password_hash = ? WHERE id = ?', [newPasswordHash, userId]);
+    await pool.query(
+      'UPDATE users SET password_hash = ? WHERE id = ?',
+      [newPasswordHash, userId]
+    );
 
     res.json({
       success: true,

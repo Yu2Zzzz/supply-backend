@@ -5,13 +5,15 @@ require('dotenv').config();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 /**
- * 验证用户是否已登录（JWT Token有效性检查）
+ * 认证中间件：
+ * - 检查 Authorization: Bearer xxx
+ * - 校验 JWT
+ * - 把用户信息挂在 req.user 上
  */
 const authMiddleware = (req, res, next) => {
   try {
-    // 从 header 获取 token
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         success: false,
@@ -21,10 +23,8 @@ const authMiddleware = (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
-    // 验证 token
     const decoded = jwt.verify(token, JWT_SECRET);
-    
-    // 将用户信息附加到请求对象
+
     req.user = {
       id: decoded.id,
       username: decoded.username,
@@ -40,7 +40,7 @@ const authMiddleware = (req, res, next) => {
         message: 'Token已过期，请重新登录'
       });
     }
-    
+
     return res.status(401).json({
       success: false,
       message: 'Token无效，请重新登录'
@@ -48,4 +48,27 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+/**
+ * 生成 JWT Token：在 login 成功后调用
+ */
+const generateToken = (user) => {
+  const payload = {
+    id: user.id,
+    username: user.username,
+    role: user.role_code || user.role || null,   // 来自联表 roles 的 role_code
+    roleId: user.role_id || user.roleId || null  // users 表里的 role_id
+  };
+
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
+};
+
+// 为了兼容你现有所有用法：
+//
+// 1) const authMiddleware = require('../middlewares/authMiddleware')
+// 2) const { authMiddleware } = require('../middlewares/authMiddleware')
+// 3) const { generateToken } = require('../middlewares/authMiddleware')
+authMiddleware.generateToken = generateToken;
+
 module.exports = authMiddleware;
+module.exports.authMiddleware = authMiddleware;
+module.exports.generateToken = generateToken;

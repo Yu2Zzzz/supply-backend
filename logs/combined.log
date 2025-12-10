@@ -8048,3 +8048,41 @@
 {"level":"info","message":"收到关闭信号，正在优雅关闭...","timestamp":"2025-12-10T03:37:57.224Z"}
 {"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T03:39:50.639Z"}
 {"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T03:48:28.244Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T03:57:32.885Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-10T03:57:40.654Z"}
+{"level":"info","message":"POST /auth/login - 1086.03ms","timestamp":"2025-12-10T03:57:41.724Z"}
+{"level":"info","message":{"duration":"1071ms","method":"POST","statusCode":500,"type":"response","url":"/auth/login"},"timestamp":"2025-12-10T03:57:41.725Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-10T04:00:09.432Z"}
+{"level":"info","message":"POST /auth/login - 505.07ms","timestamp":"2025-12-10T04:00:09.936Z"}
+{"level":"info","message":{"duration":"505ms","method":"POST","statusCode":500,"type":"response","url":"/auth/login"},"timestamp":"2025-12-10T04:00:09.937Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-10T04:00:49.138Z"}
+{"level":"info","message":"POST /auth/login - 236.43ms","timestamp":"2025-12-10T04:00:49.374Z"}
+{"level":"info","message":{"duration":"237ms","method":"POST","statusCode":500,"type":"response","url":"/auth/login"},"timestamp":"2025-12-10T04:00:49.375Z"}
+{"level":"info","message":"收到关闭信号，正在优雅关闭...","timestamp":"2025-12-10T04:01:15.087Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T04:01:24.938Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-10T04:01:33.844Z"}
+{"level":"info","message":"POST /auth/login - 1141.54ms","timestamp":"2025-12-10T04:01:34.972Z"}
+{"level":"info","message":{"duration":"1129ms","method":"POST","statusCode":500,"type":"response","url":"/auth/login"},"timestamp":"2025-12-10T04:01:34.973Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T04:04:52.203Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-10T04:05:04.502Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T04:05:05.248Z"}
+{"level":"info","message":"收到关闭信号，正在优雅关闭...","timestamp":"2025-12-10T04:05:15.910Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T04:17:15.684Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-10T04:18:01.715Z"}
+{"level":"info","message":"POST /auth/login - 772.08ms","timestamp":"2025-12-10T04:18:02.471Z"}
+{"level":"info","message":{"duration":"757ms","method":"POST","statusCode":500,"type":"response","url":"/auth/login"},"timestamp":"2025-12-10T04:18:02.472Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-10T04:18:08.976Z"}
+{"level":"info","message":"POST /auth/login - 246.50ms","timestamp":"2025-12-10T04:18:09.222Z"}
+{"level":"info","message":{"duration":"246ms","method":"POST","statusCode":500,"type":"response","url":"/auth/login"},"timestamp":"2025-12-10T04:18:09.222Z"}
+{"level":"info","message":"收到关闭信号，正在优雅关闭...","timestamp":"2025-12-10T04:24:14.064Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T04:24:19.246Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-10T04:24:28.904Z"}
+{"level":"info","message":"POST /auth/login - 866.94ms","timestamp":"2025-12-10T04:24:29.756Z"}
+{"level":"info","message":{"duration":"854ms","method":"POST","statusCode":500,"type":"response","url":"/auth/login"},"timestamp":"2025-12-10T04:24:29.758Z"}
+{"environment":"development","level":"info","message":"服务器启动成功","nodeVersion":"v24.11.1","port":"4000","timestamp":"2025-12-10T04:25:02.768Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-10T04:25:10.170Z"}
+{"level":"info","message":"POST /auth/login - 688.34ms","timestamp":"2025-12-10T04:25:10.845Z"}
+{"level":"info","message":{"duration":"676ms","method":"POST","statusCode":500,"type":"response","url":"/auth/login"},"timestamp":"2025-12-10T04:25:10.846Z"}
+{"level":"info","message":{"ip":"::1","method":"POST","type":"request","url":"/api/auth/login","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"},"timestamp":"2025-12-10T04:31:44.254Z"}
+{"level":"info","message":"POST /auth/login - 246.99ms","timestamp":"2025-12-10T04:31:44.501Z"}
+{"level":"info","message":{"duration":"247ms","method":"POST","statusCode":500,"type":"response","url":"/auth/login"},"timestamp":"2025-12-10T04:31:44.501Z"}

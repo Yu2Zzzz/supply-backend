@@ -61,8 +61,47 @@ const PERMISSIONS = {
   ALL_ROLES: [ROLES.ADMIN, ROLES.SALES, ROLES.PURCHASER]
 };
 
+/**
+ * 👉 关键：根据 role_id 返回权限数组
+ * 这里直接用硬编码映射，不需要改数据库
+ */
+async function getUserPermissions(roleId) {
+  // 你当前 roles 表里：1=admin, 2=sales, 3=purchaser :contentReference[oaicite:4]{index=4}
+  const ROLE_PERMISSIONS = {
+    1: [ // admin
+      'VIEW_DASHBOARD',
+      'MANAGE_USERS',
+      'MANAGE_PRODUCTS',
+      'MANAGE_SALES_ORDERS',
+      'MANAGE_PURCHASE_ORDERS',
+      'MANAGE_MATERIALS',
+      'VIEW_WARNINGS'
+    ],
+    2: [ // sales
+      'VIEW_DASHBOARD',
+      'VIEW_PRODUCTS',
+      'VIEW_SALES_ORDERS',
+      'EDIT_SALES_ORDERS',
+      'VIEW_WARNINGS'
+    ],
+    3: [ // purchaser
+      'VIEW_DASHBOARD',
+      'VIEW_MATERIALS',
+      'EDIT_MATERIALS',
+      'VIEW_PURCHASE_ORDERS',
+      'EDIT_PURCHASE_ORDERS',
+      'VIEW_WARNINGS'
+    ]
+  };
+
+  // 确保 roleId 是数字
+  const id = Number(roleId);
+  return ROLE_PERMISSIONS[id] || [];
+}
+
 module.exports = {
   roleMiddleware,
   ROLES,
-  PERMISSIONS
+  PERMISSIONS,
+  getUserPermissions // ✅ 一定要导出去
 };
