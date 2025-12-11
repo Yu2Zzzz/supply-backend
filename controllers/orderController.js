@@ -1,5 +1,4 @@
-﻿// backend/controllers/orderController.js - 安全简化版
-// controllers/orderController.js
+﻿// backend/controllers/orderController.js - 修复版本
 const { pool } = require('../config/database');
 const { asyncHandler, AppError } = require('../middlewares/errorHandler');
 const { paginated, success } = require('../utils/responseFormatter');
@@ -91,62 +90,88 @@ const getOrders = asyncHandler(async (req, res) => {
   res.json(paginated(result, { page, pageSize, total }));
 });
 
-// 保留你原有的其他函数: getOrderById, createOrder, updateOrder, deleteOrder...
-// 只需要在文件开头添加导入即可
-
-module.exports = {
-  getOrders,
-  // ... 你原有的其他导出
-};
-
 /**
- * 获取订单详细 - 简化版
+ * ✅ 获取订单详情 - 修复：支持订单号和数字 ID
  */
 const getOrderById = async (req, res) => {
   try {
     const { id } = req.params;
+    
+    // ✅ 关键修复：判断是订单号还是数字 ID
+    const isOrderNo = isNaN(id);
+    const field = isOrderNo ? 'o.order_no' : 'o.id';
+    
+    console.log(`🔍 Fetching order by ${field}:`, id);
 
+    // 获取订单基本信息
     const [orders] = await pool.query(`
-      SELECT o.*, c.name as customer_name
+      SELECT 
+        o.id, o.order_no, o.customer_id, o.order_date, o.delivery_date,
+        o.sales_person, o.status, o.total_amount, o.remark, o.created_at,
+        c.name as customer_name, c.customer_code, c.contact_person, c.phone
       FROM sales_orders o
       LEFT JOIN customers c ON o.customer_id = c.id
-      WHERE o.id = ?
+      WHERE ${field} = ?
     `, [id]);
 
     if (orders.length === 0) {
-      return res.status(404).json({ success: false, message: '订单不存在' });
+      console.log('❌ 订单未找到:', id);
+      return res.status(404).json({ 
+        success: false, 
+        message: '订单不存在' 
+      });
     }
 
     const order = orders[0];
+    console.log('✅ Found order:', order.id, order.order_no);
 
+    // 获取订单明细
     const [lines] = await pool.query(`
-      SELECT ol.*, p.name as product_name, p.id as product_id 
+      SELECT 
+        ol.id, ol.product_id, ol.quantity, ol.unit_price, ol.amount, ol.remark,
+        p.name as product_name, p.product_code, p.spec, p.unit
       FROM order_lines ol
       LEFT JOIN products p ON ol.product_id = p.id
       WHERE ol.order_id = ?
-    `, [id]);
+      ORDER BY ol.id
+    `, [order.id]);
 
+    console.log(`✅ Found ${lines.length} order lines`);
+
+    // 返回数据
     res.json({
       success: true,
       data: {
         id: order.id,
         orderNo: order.order_no,
+        customerId: order.customer_id,
         customerName: order.customer_name,
+        customerCode: order.customer_code,
+        contactPerson: order.contact_person,
+        phone: order.phone,
         orderDate: order.order_date,
         deliveryDate: order.delivery_date,
+        salesPerson: order.sales_person,
         status: order.status,
+        totalAmount: parseFloat(order.total_amount || 0),
         remark: order.remark,
+        createdAt: order.created_at,
         lines: lines.map(l => ({
+          id: l.id,
           productId: l.product_id,
           productName: l.product_name,
-          quantity: l.quantity,
-          unitPrice: l.unit_price,
-          amount: l.amount
+          productCode: l.product_code,
+          spec: l.spec,
+          unit: l.unit,
+          quantity: parseFloat(l.quantity),
+          unitPrice: parseFloat(l.unit_price || 0),
+          amount: parseFloat(l.amount || 0),
+          remark: l.remark
         }))
       }
     });
   } catch (error) {
-    console.error('获取订单详情错误:', error);
+    console.error('❌ 获取订单详情错误:', error);
     res.status(500).json({ 
       success: false, 
       message: '服务器内部错误: ' + error.message 
@@ -158,9 +183,9 @@ const getOrderById = async (req, res) => {
  * 创建订单
  */
 const createOrder = async (req, res) => {
-  const connection = await db.getConnection();
-  
+  let connection;
   try {
+    connection = await pool.getConnection();
     const { orderNo, customerId, orderDate, deliveryDate, salesPerson, remark, lines = [] } = req.body;
 
     // 自动生成订单号
@@ -218,7 +243,7 @@ const createOrder = async (req, res) => {
       data: { id: orderId, orderNo: finalOrderNo }
     });
   } catch (error) {
-    await connection.rollback();
+    if (connection) await connection.rollback();
     console.error('创建订单错误:', error);
 
     if (error.code === 'ER_DUP_ENTRY') {
@@ -227,7 +252,7 @@ const createOrder = async (req, res) => {
 
     res.status(500).json({ success: false, message: '服务器内部错误: ' + error.message });
   } finally {
-    connection.release();
+    if (connection) connection.release();
   }
 };
 
@@ -235,9 +260,9 @@ const createOrder = async (req, res) => {
  * 更新订单
  */
 const updateOrder = async (req, res) => {
-  const connection = await db.getConnection();
-  
+  let connection;
   try {
+    connection = await pool.getConnection();
     const { id } = req.params;
     const { orderNo, customerId, orderDate, deliveryDate, salesPerson, status, remark, lines = [] } = req.body;
 
@@ -283,7 +308,7 @@ const updateOrder = async (req, res) => {
 
     res.json({ success: true, message: '订单更新成功' });
   } catch (error) {
-    await connection.rollback();
+    if (connection) await connection.rollback();
     console.error('更新订单错误:', error);
 
     if (error.code === 'ER_DUP_ENTRY') {
@@ -292,7 +317,7 @@ const updateOrder = async (req, res) => {
 
     res.status(500).json({ success: false, message: '服务器内部错误: ' + error.message });
   } finally {
-    connection.release();
+    if (connection) connection.release();
   }
 };
 
@@ -300,9 +325,9 @@ const updateOrder = async (req, res) => {
  * 删除订单
  */
 const deleteOrder = async (req, res) => {
-  const connection = await db.getConnection();
-  
+  let connection;
   try {
+    connection = await pool.getConnection();
     const { id } = req.params;
 
     const [existing] = await connection.query('SELECT id, status FROM sales_orders WHERE id = ?', [id]);
@@ -312,7 +337,7 @@ const deleteOrder = async (req, res) => {
 
     // 只有 pending 能删除，否则改为 cancelled
     if (existing[0].status !== 'pending') {
-      await pool.query("UPDATE sales_orders SET status = 'cancelled' WHERE id = ?", [id]);
+      await connection.query("UPDATE sales_orders SET status = 'cancelled' WHERE id = ?", [id]);
       return res.json({ success: true, message: '订单已取消' });
     }
 
@@ -328,11 +353,11 @@ const deleteOrder = async (req, res) => {
 
     res.json({ success: true, message: '订单删除成功' });
   } catch (error) {
-    await connection.rollback();
+    if (connection) await connection.rollback();
     console.error('删除订单错误:', error);
     res.status(500).json({ success: false, message: '服务器内部错误' });
   } finally {
-    connection.release();
+    if (connection) connection.release();
   }
 };
 

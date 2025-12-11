@@ -157,7 +157,7 @@ const globalLimiter = rateLimit({
 // API 限流
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 1000,
   message: {
     success: false,
     message: 'API 调用频率超限，请稍后再试'

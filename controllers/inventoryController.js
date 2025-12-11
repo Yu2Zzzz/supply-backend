@@ -1,14 +1,22 @@
-﻿// backend/controllers/inventoryController.js
+﻿// backend/controllers/inventoryController.js - 修复版本
 const { pool } = require('../config/database');
 
 /**
  * 获取库存列表
  * GET /api/inventory
- * 参数: warehouseId, type (material/product)
+ * 参数: warehouseId, materialId, type (material/product)
  */
 const getInventory = async (req, res) => {
   try {
-    const { warehouseId, type = 'material', page = 1, pageSize = 100 } = req.query;
+    const { 
+      warehouseId, 
+      materialId,  // ✅ 添加 materialId 参数
+      productId,   // ✅ 添加 productId 参数
+      type = 'material', 
+      page = 1, 
+      pageSize = 100 
+    } = req.query;
+    
     const offset = (page - 1) * pageSize;
 
     let query, countQuery, params = [];
@@ -16,9 +24,16 @@ const getInventory = async (req, res) => {
     if (type === 'product') {
       // 产品库存
       let whereClause = 'WHERE 1=1';
+      
       if (warehouseId) {
         whereClause += ' AND pi.warehouse_id = ?';
         params.push(warehouseId);
+      }
+      
+      // ✅ 添加：按 productId 过滤
+      if (productId) {
+        whereClause += ' AND pi.product_id = ?';
+        params.push(productId);
       }
 
       countQuery = `
@@ -52,9 +67,16 @@ const getInventory = async (req, res) => {
     } else {
       // 物料库存
       let whereClause = 'WHERE 1=1';
+      
       if (warehouseId) {
         whereClause += ' AND i.warehouse_id = ?';
         params.push(warehouseId);
+      }
+      
+      // ✅ 关键修复：按 materialId 过滤
+      if (materialId) {
+        whereClause += ' AND i.material_id = ?';
+        params.push(materialId);
       }
 
       countQuery = `
@@ -210,9 +232,22 @@ const getInventoryById = async (req, res) => {
  */
 const createInventory = async (req, res) => {
   try {
-    const { type = 'material', itemId, warehouseId, quantity = 0, safetyStock = 0 } = req.body;
+    const { 
+      type = 'material', 
+      itemId,           // 物料/产品 ID
+      materialId,       // ✅ 兼容 materialId
+      productId,        // ✅ 兼容 productId
+      warehouseId, 
+      quantity = 0, 
+      safetyStock = 0,
+      safety_stock = 0  // ✅ 兼容下划线命名
+    } = req.body;
 
-    if (!itemId || !warehouseId) {
+    // ✅ 灵活处理 ID
+    const finalItemId = itemId || materialId || productId;
+    const finalSafetyStock = safetyStock || safety_stock || 0;
+
+    if (!finalItemId || !warehouseId) {
       return res.status(400).json({
         success: false,
         message: '物料/产品ID和仓库ID不能为空'
@@ -231,7 +266,7 @@ const createInventory = async (req, res) => {
     // 检查是否已存在
     const [existing] = await pool.query(
       `SELECT id FROM ${table} WHERE ${itemColumn} = ? AND warehouse_id = ?`,
-      [itemId, warehouseId]
+      [finalItemId, warehouseId]
     );
 
     if (existing.length > 0) {
@@ -243,7 +278,7 @@ const createInventory = async (req, res) => {
 
     const [result] = await pool.query(
       `INSERT INTO ${table} (${itemColumn}, warehouse_id, quantity, safety_stock) VALUES (?, ?, ?, ?)`,
-      [itemId, warehouseId, quantity, safetyStock]
+      [finalItemId, warehouseId, quantity, finalSafetyStock]
     );
 
     res.status(201).json({
@@ -268,9 +303,10 @@ const createInventory = async (req, res) => {
 const updateInventory = async (req, res) => {
   try {
     const { id } = req.params;
-    const { quantity, safetyStock, type = 'material' } = req.body;
+    const { quantity, safetyStock, safety_stock, type = 'material' } = req.body;
 
     const table = type === 'product' ? 'product_inventory' : 'inventory';
+    const finalSafetyStock = safetyStock || safety_stock;
 
     // 检查记录是否存在
     const [existing] = await pool.query(`SELECT id FROM ${table} WHERE id = ?`, [id]);
@@ -289,9 +325,9 @@ const updateInventory = async (req, res) => {
       updates.push('quantity = ?');
       values.push(quantity);
     }
-    if (safetyStock !== undefined) {
+    if (finalSafetyStock !== undefined) {
       updates.push('safety_stock = ?');
-      values.push(safetyStock);
+      values.push(finalSafetyStock);
     }
 
     if (updates.length === 0) {

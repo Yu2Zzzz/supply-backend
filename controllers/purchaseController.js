@@ -222,7 +222,7 @@ const getPurchaseOrderById = async (req, res) => {
  * POST /api/purchase-orders
  */
 const createPurchaseOrder = async (req, res) => {
-  const connection = await db.getConnection();
+  const connection = await pool.getConnection();
   
   try {
     const { 
@@ -339,7 +339,7 @@ const createPurchaseOrder = async (req, res) => {
  * PUT /api/purchase-orders/:id
  */
 const updatePurchaseOrder = async (req, res) => {
-  const connection = await db.getConnection();
+  const connection = await pool.getConnection();
   
   try {
     const { id } = req.params;
@@ -504,7 +504,7 @@ const updatePurchaseOrder = async (req, res) => {
  * DELETE /api/purchase-orders/:id
  */
 const deletePurchaseOrder = async (req, res) => {
-  const connection = await db.getConnection();
+  const connection = await pool.getConnection();
   
   try {
     const { id } = req.params;

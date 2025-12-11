@@ -72,8 +72,10 @@ const getMaterials = async (req, res) => {
           buyer: m.buyer,
           category: m.category,
           status: m.status,
-          currentStock: m.current_stock,
-          inTransitQty: m.in_transit_qty,
+          stock: m.current_stock,
+          inTransit: m.in_transit_qty,
+          currentStock: m.current_stock,  // 保留
+          inTransitQty: m.in_transit_qty,  // 保留
           supplierCount: m.supplier_count,
           createdAt: m.created_at
         })),
