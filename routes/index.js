@@ -265,7 +265,7 @@ router.get('/data', async (req, res) => {
     // 管理员和业务员可以看订单
     if (['admin', 'sales'].includes(userRole)) {
       const [orders] = await pool.query(`
-        SELECT o.id, o.order_no, c.name as customer, o.order_date, o.delivery_date, o.sales_person
+       SELECT o.id, o.order_no, c.name as customer, o.order_date, o.delivery_date, o.sales_person, o.status
         FROM sales_orders o
         JOIN customers c ON o.customer_id = c.id
         WHERE o.status NOT IN ('completed', 'cancelled')
@@ -276,7 +276,8 @@ router.get('/data', async (req, res) => {
         customer: o.customer,
         orderDate: o.order_date,
         deliveryDate: o.delivery_date,
-        salesPerson: o.sales_person
+        salesPerson: o.sales_person,
+        status: o.status  // ← 添加这行！
       }));
 
       const [orderLines] = await pool.query(`
