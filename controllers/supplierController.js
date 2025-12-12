@@ -32,7 +32,11 @@ const getSuppliers = async (req, res) => {
 
     // 查询列表
     const [suppliers] = await pool.query(`
-      SELECT * FROM suppliers 
+      SELECT 
+        id, supplier_code, name, contact_person, phone, email, address, 
+        on_time_rate, quality_rate, status, remark, created_at,
+        category, product_name, unit_price, payment_method
+      FROM suppliers 
       ${whereClause}
       ORDER BY created_at DESC
       LIMIT ? OFFSET ?
@@ -51,6 +55,10 @@ const getSuppliers = async (req, res) => {
           address: s.address,
           onTimeRate: s.on_time_rate,
           qualityRate: s.quality_rate,
+          category: s.category,
+          productName: s.product_name,
+          unitPrice: s.unit_price,
+          paymentMethod: s.payment_method,
           status: s.status,
           remark: s.remark,
           createdAt: s.created_at
@@ -81,7 +89,14 @@ const getSupplierById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [suppliers] = await pool.query('SELECT * FROM suppliers WHERE id = ?', [id]);
+    const [suppliers] = await pool.query(`
+      SELECT 
+        id, supplier_code, name, contact_person, phone, email, address,
+        on_time_rate, quality_rate, status, remark, created_at,
+        category, product_name, unit_price, payment_method
+      FROM suppliers
+      WHERE id = ?
+    `, [id]);
 
     if (suppliers.length === 0) {
       return res.status(404).json({
@@ -112,6 +127,10 @@ const getSupplierById = async (req, res) => {
         address: supplier.address,
         onTimeRate: supplier.on_time_rate,
         qualityRate: supplier.quality_rate,
+        category: supplier.category,
+        productName: supplier.product_name,
+        unitPrice: supplier.unit_price,
+        paymentMethod: supplier.payment_method,
         status: supplier.status,
         remark: supplier.remark,
         createdAt: supplier.created_at,
@@ -150,6 +169,10 @@ const createSupplier = async (req, res) => {
       address, 
       onTimeRate = 0.90,
       qualityRate = 0.95,
+      category = null,
+      productName = null,
+      unitPrice = null,
+      paymentMethod = null,
       remark 
     } = req.body;
 
@@ -161,9 +184,15 @@ const createSupplier = async (req, res) => {
     }
 
     const [result] = await pool.query(`
-      INSERT INTO suppliers (supplier_code, name, contact_person, phone, email, address, on_time_rate, quality_rate, remark)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [supplierCode, name, contactPerson, phone, email, address, onTimeRate, qualityRate, remark]);
+      INSERT INTO suppliers (
+        supplier_code, name, contact_person, phone, email, address, 
+        on_time_rate, quality_rate, category, product_name, unit_price, payment_method, remark
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [
+      supplierCode, name, contactPerson, phone, email, address, 
+      onTimeRate, qualityRate, category, productName, unitPrice, paymentMethod, remark
+    ]);
 
     res.status(201).json({
       success: true,
@@ -204,6 +233,10 @@ const updateSupplier = async (req, res) => {
       address, 
       onTimeRate,
       qualityRate,
+      category = null,
+      productName = null,
+      unitPrice = null,
+      paymentMethod = null,
       status,
       remark 
     } = req.body;
@@ -220,9 +253,16 @@ const updateSupplier = async (req, res) => {
     await pool.query(`
       UPDATE suppliers 
       SET supplier_code = ?, name = ?, contact_person = ?, phone = ?, email = ?, 
-          address = ?, on_time_rate = ?, quality_rate = ?, status = ?, remark = ?
+          address = ?, on_time_rate = ?, quality_rate = ?, 
+          category = ?, product_name = ?, unit_price = ?, payment_method = ?,
+          status = ?, remark = ?
       WHERE id = ?
-    `, [supplierCode, name, contactPerson, phone, email, address, onTimeRate, qualityRate, status, remark, id]);
+    `, [
+      supplierCode, name, contactPerson, phone, email, address, 
+      onTimeRate, qualityRate, 
+      category, productName, unitPrice, paymentMethod,
+      status, remark, id
+    ]);
 
     res.json({
       success: true,
