@@ -284,7 +284,7 @@ const deleteProduct = async (req, res) => {
  * 更新产品BOM
  */
 const updateProductBom = async (req, res) => {
-  const connection = await db.getConnection();
+  const connection = await pool.getConnection();
   
   try {
     const { id } = req.params;
