@@ -7,7 +7,7 @@ const { pool } = require('../config/database');
  */
 const getSuppliers = async (req, res) => {
   try {
-    const { page = 1, pageSize = 20, keyword = '', status = '' } = req.query;
+    const { page = 1, pageSize = 20, keyword = '', status = '', category = '' } = req.query;
     const offset = (page - 1) * pageSize;
 
     let whereClause = 'WHERE 1=1';
@@ -21,6 +21,11 @@ const getSuppliers = async (req, res) => {
     if (status) {
       whereClause += ' AND status = ?';
       params.push(status);
+    }
+
+    if (category) {
+      whereClause += ' AND category = ?';
+      params.push(category);
     }
 
     // 查询总数
