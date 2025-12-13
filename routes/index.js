@@ -44,7 +44,8 @@ router.get('/products/:id', roleMiddleware(PERMISSIONS.ALL_ROLES), productContro
 router.post('/products', roleMiddleware(PERMISSIONS.ADMIN_ONLY), productController.createProduct);
 router.put('/products/:id', roleMiddleware(PERMISSIONS.ADMIN_ONLY), productController.updateProduct);
 router.delete('/products/:id', roleMiddleware(PERMISSIONS.ADMIN_ONLY), productController.deleteProduct);
-router.put('/products/:id/bom', roleMiddleware(PERMISSIONS.ADMIN_ONLY), productController.updateProductBom);
+// BOM 更新需要采购或管理员权限（导入 BOM 时更方便）
+router.put('/products/:id/bom', roleMiddleware(PERMISSIONS.PURCHASER_ACCESS), productController.updateProductBom);
 
 // ==================== 业务订单管理 ====================
 // 管理员 + 业务员
